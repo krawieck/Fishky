@@ -1,11 +1,5 @@
-//
-//  Flashcard.swift
-//  Fishky
-//
-//  Created by Filip Krawczyk on 20/01/2022.
-//
-
 import SwiftUI
+import SwiftData
 
 // MARK: DeleteButton
 
@@ -20,8 +14,6 @@ struct DeleteButton: View {
 // MARK: FlashcardEditView
 
 struct FlashcardEditView: View {
-    let handleDelete: () -> Void
-
     @Bindable var flashcard: Flashcard
     @Environment(\.colorScheme) var colorScheme
     #if os(iOS)
@@ -32,61 +24,20 @@ struct FlashcardEditView: View {
     #endif
     @State var confirmDeletion = false
 
-    init(flashcard: Flashcard, handleDelete: @escaping () -> Void) {
+    init(flashcard: Flashcard) {
         _flashcard = Bindable(flashcard)
-        self.handleDelete = handleDelete
-    }
-
-    func internalHandleDelete() {
-        if confirmDeletion {
-            handleDelete()
-        } else {
-            confirmDeletion = true
-        }
-    }
-
-    fileprivate func input(label: String, text: Binding<String>) -> some View {
-        #if os(iOS)
-        return Text(text.wrappedValue)
-//        return TextEditor(text: text)
-        #elseif os(macOS)
-        return Text(text.wrappedValue)
-//        return TextEditor(text: text)
-        #endif
     }
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            VStack {
-                input(label: "Front text", text: $flashcard.frontText)
+            LazyVStack {
+                TextEditorView(text: $flashcard.frontText, hintText: "front")
                 DashedLine()
-                input(label: "Back Text", text: $flashcard.backText)
+                TextEditorView(text: $flashcard.backText, hintText: "back")
             }
             .padding()
-            .contextMenu {
-                // TODO: add menu items
-                Button("test menu") {}
-            }
+            .background(.background)
             .addBorder(.gray.opacity(colorScheme == .dark ? 0.5 : 0.5), cornerRadius: 15)
-            
-
-            #if os(iOS)
-                if isEditing {
-                    Button(action: internalHandleDelete) {
-                        if !confirmDeletion {
-                            Image(systemName: "trash")
-                        } else {
-                            Text("Delete")
-                        }
-
-                    }.buttonStyle(.bordered)
-                        .buttonBorderShape(.capsule)
-                        .foregroundColor(confirmDeletion ? .red : .gray)
-                        .background(.background)
-                        .cornerRadius(20)
-                        .padding(10)
-                }
-            #endif
         }
         #if os(iOS)
         .onChange(of: isEditing) {
@@ -133,14 +84,21 @@ struct Line: Shape {
 
 // MARK: Preview
 
-#Preview {
+#Preview(traits: .sampleData) {
+    @Previewable @Query var flashcards: [Flashcard]
     NavigationStack {
         ScrollView {
-            ModelPreview { content in
-                FlashcardEditView(flashcard: content) { }
-                    .padding()
-            }
+            FlashcardEditView(flashcard: flashcards.first!)
+                .safeAreaPadding(.all)
+            
+        }.toolbar {
+            #if os(iOS)
+            EditButton()
+            #endif
         }
     }
 }
 
+#Preview {
+    FlashcardEditView(flashcard: Flashcard(index: 0, front: "", back: "")).padding()
+}

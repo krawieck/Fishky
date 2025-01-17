@@ -1,10 +1,3 @@
-//
-//  NewFlashcardButton.swift
-//  Fishky
-//
-//  Created by Filip Krawczyk on 24/01/2022.
-//
-
 import SwiftUI
 
 struct NewFlashcardButton: View {

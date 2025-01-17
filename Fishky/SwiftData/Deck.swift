@@ -1,15 +1,8 @@
-//
-//  Deck.swift
-//  Fishky
-//
-//  Created by Filip Krawczyk on 18/06/2023.
-//
-
 import Foundation
 import SwiftData
 
 @Model
-final class Deck: Hashable, CustomStringConvertible {
+final class Deck: Hashable, CustomStringConvertible, Identifiable {
     var name: String = ""
     var icon: String = ""
     var timeCreated: Date = Date.now
@@ -31,13 +24,15 @@ final class Deck: Hashable, CustomStringConvertible {
         self.timeUpdated = .now
     }
     
-    // MARK: operations
+    
+    // MARK: OPERATIONS
     
     static func deleteItems(at offsets: IndexSet, for decks: [Deck]) {
         if let context = decks.first?.modelContext {
             offsets.map { decks[$0] }.forEach { deck in
                 context.delete(deck)
             }
+            
         }
     }
     
@@ -46,8 +41,25 @@ final class Deck: Hashable, CustomStringConvertible {
     }
     
     /// Add flashcard to the end
-    func addFlashcard(_ f: Flashcard = Flashcard()) {
+    func addFlashcard(_ f: Flashcard = Flashcard(index: 0)) {
+        f.index = flashcards.count
         flashcards.append(f)
         deckUpdated()
+    }
+}
+
+// MARK: PREVIEW
+
+extension Deck {
+    static var preview: Deck {
+        .init(name: "Deck", icon: "paintbrush")
+    }
+    static var previewDecks: [Deck] {
+        [
+            .init(name: "Analiza Matematyczna", icon: "paintbrush"),
+            .init(name: "Algebra Liniowa", icon: "scale.3d"),
+            .init(name: "English", icon: "globe")
+        ]
+
     }
 }

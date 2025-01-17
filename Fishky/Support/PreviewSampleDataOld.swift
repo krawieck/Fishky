@@ -1,20 +1,11 @@
-//
-//  PreviewSampleData.swift
-//  Fishky
-//
-//  Created by Filip Krawczyk on 03/07/2023.
-//
-
-
-
 import Foundation
 import SwiftUI
 import SwiftData
 
 let sampleFlashcards: [Flashcard] = [
-    Flashcard(front: "short", back: "back"),
-    Flashcard(front: "flashcard 2", back: "this is the back of this flashcard"),
-    Flashcard(front: "tan x", back: "sinx/cosx")
+    Flashcard(index: 0, front: "short", back: "back"),
+    Flashcard(index: 1, front: "flashcard 2", back: "this is the back of this flashcard"),
+    Flashcard(index: 2, front: "tan x", back: "sinx/cosx")
     
 ]
 
