@@ -28,6 +28,10 @@ struct FishkyApp: App {
         WindowGroup("Study", id: "study", for: Deck.ID.self) { $deckId in
             if let deckId {
                 FullscreenStudyView.Window(for: deckId)
+                #if os(macOS)
+                    .toolbar(removing: .title)
+                    .toolbarBackground(.hidden, for: .windowToolbar)
+                #endif
             } else {
                 ContentUnavailableView {
                     Label("Deck not found", systemImage: "xmark")
@@ -35,7 +39,9 @@ struct FishkyApp: App {
                     Text("This deck does not exist")
                 }
             }
-        }
+        }.defaultSize(width: 600, height: 400)
+        
+//        .windowToolbarStyle(.unifiedCompact(showsTitle: false))
         .modelContainer(modelContainer)
     }
 }

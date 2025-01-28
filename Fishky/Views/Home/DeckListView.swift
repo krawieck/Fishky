@@ -3,6 +3,7 @@ import SwiftData
 
 struct DeckListView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.openWindow) private var openWindow
     
     @Binding var currentDeck: Deck?
     @Query(sort: \Deck.timeUpdated, order: .reverse) var decks: [Deck]
@@ -21,8 +22,17 @@ struct DeckListView: View {
             ForEach(decks) { deck in
                 DeckListItem(deck: deck)
                     .contextMenu {
+                        #if os(macOS)
+                        Button {
+                            openWindow(id: "deck", value: deck.id)
+                        } label: {
+                            Label("Open in new window", systemImage: "macwindow.on.rectangle")
+                        }
+                        #endif
                         deleteItemButton(deck)
+                        
                     }
+// TODO: double tap to open in new window
             }
             .onDelete { indexSet in
                 deleteItems(offsets: indexSet)
@@ -36,7 +46,7 @@ struct DeckListView: View {
 #endif
             ToolbarItem(placement: .primaryAction) {
                 Button(action: addDeck) {
-                    Label("Add Item", systemImage: "plus")
+                    Label("Create deck", systemImage: "plus")
                 }
             }
         }

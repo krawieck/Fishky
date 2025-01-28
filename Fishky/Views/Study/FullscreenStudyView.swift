@@ -46,18 +46,13 @@ struct FullscreenStudyView: View {
             ScrollView {
                 LazyVStack(spacing: 0) {
                     ForEach(Array(flashcards.enumerated()), id: \.element) { index, flashcard in
-                        ZStack {
-                            Rectangle()
-//                                .fill(LinearGradient(gradient: .red.gradient,
-//                                                     startPoint: .top, endPoint: .bottom))
-                                .fill(Color.blue.opacity(0.6))
-                                .containerRelativeFrame([.horizontal, .vertical])
-                            FlashcardStudyView(flashcard: flashcard, flipped: flipped[index])
-                                .padding()
-                        }
-                        .onTapGesture {
-                            flipped[index].toggle()
-                        }
+                        FlashcardStudyView(flashcard: flashcard, flipped: $flipped[index])
+                            .padding()
+                            .containerRelativeFrame([.horizontal, .vertical])
+                            .aspectRatio(2/3, contentMode: .fit)
+                            .onTapGesture {
+                                flipped[index].toggle()
+                            }
                     }
                 }
                 .scrollTargetLayout()
@@ -65,6 +60,7 @@ struct FullscreenStudyView: View {
             
             .scrollTargetBehavior(.paging)
             .ignoresSafeArea()
+            .background(Color.blue.opacity(0.6))
         }
         .overlay {
             if flashcards.isEmpty {
@@ -75,6 +71,7 @@ struct FullscreenStudyView: View {
                 }
             }
         }
+        #if os(iOS)
         .overlay(alignment: .topTrailing) {
             Button("Dismiss", systemImage: "xmark") { dismiss() }
                 .tint(.secondary)
@@ -85,7 +82,7 @@ struct FullscreenStudyView: View {
                 .padding(.top, 5 )
                 .padding(.horizontal, 15)
         }
-
+        #endif
     }
 }
 
@@ -95,6 +92,10 @@ struct FullscreenStudyView: View {
     @Previewable @Query var decks: [Deck]
     
     FullscreenStudyView(deck: decks.filter { !$0.flashcards.isEmpty }.last!)
+    #if os(macOS)
+        .toolbar(removing: .title)
+        .toolbarBackground(.hidden, for: .windowToolbar)
+    #endif
 }
 
 #Preview("empty", traits: .sampleData) {
