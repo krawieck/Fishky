@@ -3,16 +3,22 @@ import SwiftData
 import os
 
 struct FlashcardListView: View {
-    @Bindable var deck: Deck
-    @Query var flashcards: [Flashcard]
     @Environment(\.modelContext) var context
-    
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
 #if os(iOS)
     @Environment(\.editMode) var editMode
     private var isEditing: Bool {
         editMode?.wrappedValue.isEditing ?? false
     }
 #endif
+
+    @Bindable var deck: Deck
+    @Query var flashcards: [Flashcard]
+
+    
+    let columns = [GridItem(.adaptive(minimum: 250, maximum: 350))]
+    
     init(_ deck: Deck) {
         self._deck = Bindable(deck)
         let deckId = deck.persistentModelID
@@ -22,34 +28,55 @@ struct FlashcardListView: View {
         _flashcards = Query(filter: predicate, sort: \.index)
     }
     
+    
+    
     var body: some View {
-        ForEach(flashcards) { flashcard in
-            FlashcardEditView(flashcard: flashcard)
-                .overlay(alignment: .topTrailing) {
-#if os(iOS)
-                    if editMode?.wrappedValue.isEditing ?? false {
-                        Button(action: { deleteFlashcard(flashcard) }) {
-                            Image(systemName: "trash").foregroundStyle(.red)
+        if horizontalSizeClass == .compact {
+            
+            ForEach(flashcards) { flashcard in
+                FlashcardEditView(flashcard: flashcard)
+                    .id(flashcard.id)
+                    .listRowSeparator(.hidden)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button {
+                            deleteFlashcard(flashcard)
+                        } label: {
+                            Label("Delete", systemImage: "xmark")
                         }
-                        .buttonStyle(.bordered)
-                        .buttonBorderShape(.capsule)
-                        .foregroundColor(.gray)
-                        .background(.background)
-                        .cornerRadius(20)
-                        .padding(10)
                     }
+                    .contextMenu {
+                        Button {
+                            deleteFlashcard(flashcard)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+            }
+        } else {
+            LazyVGrid(columns: columns) {
+                ForEach(flashcards) { flashcard in
+                    FlashcardEditView(flashcard: flashcard)
+                        .overlay(alignment: .topTrailing) {
+#if os(iOS)
+                            if editMode?.wrappedValue.isEditing ?? false {
+                                Button(action: { deleteFlashcard(flashcard) }) {
+                                    Image(systemName: "trash").foregroundStyle(.red)
+                                }
+                                .buttonStyle(.bordered)
+                                .buttonBorderShape(.capsule)
+                                .foregroundColor(.gray)
+                                .background(.background)
+                                .cornerRadius(20)
+                                .padding(10)
+                            }
 #endif
+                        }
+                        .id(flashcard.id)
+                        .listRowSeparator(.hidden)
                 }
-                .id(flashcard.id)
-                .listRowSeparator(.hidden)
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    Button {
-                        deleteFlashcard(flashcard)
-                    } label: {
-                        Label("Delete", systemImage: "xmark")
-                    }
-                }
+            }
         }
+        
     }
 }
 
