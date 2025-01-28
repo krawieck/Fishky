@@ -54,14 +54,20 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered {
             flashcard.modelContext?.delete(f)
         }
         
+        
+        
         logger.info("\(sortedFlashcards.count)")
 
         logger.info("count: \(sortedFlashcards.count)")
         print(index)
         print(sortedFlashcards.count)
+        if sortedFlashcards.isEmpty {
+            return
+        }
 //        if index == sorted.count {
 //            return
 //        }
+        
         for val in sortedFlashcards[index..<sortedFlashcards.count] {
             logger.info("i: \(val.index)")
             val.index -= 1
