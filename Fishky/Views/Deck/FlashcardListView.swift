@@ -18,6 +18,14 @@ struct FlashcardListView: View {
 
     
     let columns = [GridItem(.adaptive(minimum: 250, maximum: 350))]
+    func flashcardDeleteButton(_ flashcard: Flashcard) -> some View {
+        Button {
+            deleteFlashcard(flashcard)
+        } label: {
+            Image(systemName: "xmark")
+                .padding(8)
+        }.tint(.gray.opacity(0.8))
+    }
     
     init(_ deck: Deck) {
         self._deck = Bindable(deck)
@@ -51,6 +59,13 @@ struct FlashcardListView: View {
                             Label("Delete", systemImage: "trash")
                         }
                     }
+                #if os(iOS)
+                    .overlay(alignment: .topTrailing) {
+                        if isEditing {
+                            flashcardDeleteButton(flashcard)
+                        }
+                    }
+                #endif
             }
         } else {
             LazyVGrid(columns: columns) {
@@ -73,6 +88,13 @@ struct FlashcardListView: View {
                         }
                         .id(flashcard.id)
                         .listRowSeparator(.hidden)
+                    #if os(iOS)
+                        .overlay(alignment: .topTrailing) {
+                            if isEditing {
+                                flashcardDeleteButton(flashcard)
+                            }
+                        }
+                    #endif
                 }
             }
         }
