@@ -1,19 +1,58 @@
 import Foundation
+import SwiftUI
 import SwiftData
 import os
 
+//#if os(macOS)
+//extension NSImage {
+///// Returns the PNG data for the `NSImage` as a Data object.
+/////
+///// - Returns: A data object containing the PNG data for the image, or nil
+///// in the event of failure.
+/////
+//    public func pngData() -> Data? {
+//        guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+//            return nil
+//        }
+//        
+//        let bitmapRepresentation = NSBitmapImageRep(cgImage: cgImage)
+//        return bitmapRepresentation.representation(using: .png, properties: [:])
+//    }
+//}
+//#endif
+//#if os(iOS)
+//extension Image {
+//    public func pngData() async -> Data? {
+////        guard let cgImage = self.cgImage() else {
+////            return nil
+////        }
+//        do {
+//            return try await self.exported(as: .png)
+//        } catch {
+//            Logger().warning("\(error.localizedDescription)")
+//            return nil
+//        }
+//    }
+//}
+//#endif
+
 protocol Ordered {
-    var index: Int { get set }
+    var order: Int { get set }
+}
+
+enum KnowlegeLevel {
+    case high, low, medium
 }
 
 @Model
-final class Flashcard: Hashable, CustomStringConvertible, Ordered {
-    var index: Int
+final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
+    @Attribute(originalName: "index")
+    var order: Int
     
     var frontText: String
     var backText: String
-//    @Attribute(.externalStorage) var backImage: Data?
-//    @Attribute(.externalStorage) var frontImage: Data?
+    @Attribute(.externalStorage) var backImage: Data?
+    @Attribute(.externalStorage) var frontImage: Data?
     
     var deck: Deck?
     
@@ -21,59 +60,24 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered {
         self.frontText = front
         self.backText = back
         
-        self.index = index
+        self.order = index
     }
     
     var description: String {
-        "Flashcard(index: \(index), frontText: \(frontText), backText: \(backText))"
+        "Flashcard(index: \(order), frontText: \(frontText), backText: \(backText))"
     }
     
     
-    // MARK: OPERATIONS
-    
+    // MARK: OPERATIONS 
     func deckUpdated() {
         if let deck {
             deck.deckUpdated()
+        } else {
             let logger = Logger()
             logger.warning("flashcard without a deck updated")
         }
     }
-    
-    static func deleteItem(_ flashcard: Flashcard) {
-        let index = flashcard.index
-        let logger = Logger()
-        logger.info("deleting flashcard \(index)")
-        
-        guard var flashcards = flashcard.deck?.flashcards else {
-            return
-        }
-        let sortedFlashcards = flashcards.sorted { $0.index < $1.index }
-        let toBeDeleted = flashcards.filter { $0.index == index }
-        flashcards.removeAll { $0.index == index }
-        for f in toBeDeleted {
-            flashcard.modelContext?.delete(f)
-        }
-        
-        
-        
-        logger.info("\(sortedFlashcards.count)")
 
-        logger.info("count: \(sortedFlashcards.count)")
-        print(index)
-        print(sortedFlashcards.count)
-        if sortedFlashcards.isEmpty {
-            return
-        }
-//        if index == sorted.count {
-//            return
-//        }
-        
-        for val in sortedFlashcards[index..<sortedFlashcards.count] {
-            logger.info("i: \(val.index)")
-            val.index -= 1
-        }
-        print(sortedFlashcards)
-    }
 }
 
 // MARK: PREVIEW

@@ -48,13 +48,15 @@ struct DeckView: View {
     // MARK: BODY
     
     var body: some View {
-        List {
+        ScrollView {
             TextField("Untitled Deck", text: $deck.name)
                 .font(.largeTitle.bold())
                 .listRowSeparator(.hidden)
             FlashcardListView(deck)
-                .navigationTitle($deck.name)
+//                .navigationTitle($deck.name)
             
+            
+            // TODO: move this to FlashcardListView so that it changes size based on the list type
             NewFlashcardButton {
                 withAnimation(.bouncy) {
                     addFlashcard()
@@ -65,11 +67,23 @@ struct DeckView: View {
                 .listRowSeparator(.hidden)
             
         }
-        .navigationTitle($deck.name)
-        .listStyle(.plain)
-        .listRowSeparator(.hidden)
+        .contentMargins(12, for: .scrollContent)
+//        .navigationTitle($deck.name)
+//        .navigationTitle("testing")
         .toolbar {
 #if os(macOS)
+            ToolbarItem(placement: .principal) {
+                HStack {
+                    Text(deck.name).font(.title2).fontWeight(.medium)
+                    Button {
+                        print("")
+                    } label: {
+                        Label("Rename deck", systemImage: "pencil")
+                    }
+                    Spacer()
+                
+                }.padding()
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     openWindow(id: "study", value: deck.id)
@@ -77,8 +91,8 @@ struct DeckView: View {
                     Label("Study", systemImage: "graduationcap.fill")
                 }
                 .buttonStyle(.borderedProminent)
-                
             }
+           
 #endif
 #if os(iOS)
            
@@ -105,16 +119,21 @@ struct DeckView: View {
         .onDisappear {
             let logger = Logger()
             withAnimation {
-                if deck.name.isEmpty && deck.flashcards.isEmpty && deck.icon.isEmpty {
-                    logger.info("DELETE DECK")
-                    deleteDeck()
-                }
+                
                 do {
-                    context.insert(deck)
+                    if deck.name.isEmpty && deck.flashcards.isEmpty && deck.icon.isEmpty {
+                        logger.info("DELETE DECK \(Date())")
+                        deleteDeck()
+                    } else {
+                        context.insert(deck)
+                        logger.info("INSERT DECK \(Date())")
+                    }
+                    
                     try context.save()
                 } catch {
                     logger.error("\(error)")
                 }
+                
             }
         }
     }

@@ -13,9 +13,10 @@ struct DeleteButton: View {
 
 // MARK: FlashcardEditView
 
-struct FlashcardEditView: View {
+struct FlashcardEditTile: View {
     @Bindable var flashcard: Flashcard
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.modelContext) var context
     #if os(iOS)
         @Environment(\.editMode) var editMode
         private var isEditing: Bool {
@@ -24,16 +25,19 @@ struct FlashcardEditView: View {
     #endif
     @State var confirmDeletion = false
 
-    init(flashcard: Flashcard) {
+    init(flashcard: Flashcard, inactive: Bool = false) {
         _flashcard = Bindable(flashcard)
+        self.inactive = inactive
     }
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            LazyVStack {
-                TextEditorView(text: $flashcard.frontText, hintText: "front")
+            VStack {
+                TextEditorView(text: $flashcard.frontText,
+                               hintText: "front")
                 DashedLine()
-                TextEditorView(text: $flashcard.backText, hintText: "back")
+                TextEditorView(text: $flashcard.backText,
+                               hintText: "back")
             }
             .padding()
             .background(.background)
@@ -46,10 +50,15 @@ struct FlashcardEditView: View {
             }
         }
         #endif
-//        .dropDestination { items, location in
-//            // TODO: use .dropDestination for adding images
-//        }
     }
+    
+    func deleteFlashcard(_ flashcard: Flashcard) {
+       withAnimation {
+           flashcard.deck?.deleteFlashcard(flashcard)
+           try? context.save()
+       }
+       
+   }
 }
 
 // MARK: Border
@@ -88,7 +97,7 @@ struct Line: Shape {
     @Previewable @Query var flashcards: [Flashcard]
     NavigationStack {
         ScrollView {
-            FlashcardEditView(flashcard: flashcards.first!)
+            FlashcardEditTile(flashcard: flashcards.first!)
                 .safeAreaPadding(.all)
             
         }.toolbar {
@@ -100,5 +109,5 @@ struct Line: Shape {
 }
 
 #Preview {
-    FlashcardEditView(flashcard: Flashcard(index: 0, front: "", back: "")).padding()
+    FlashcardEditTile(flashcard: Flashcard(index: 0, front: "", back: "")).padding()
 }

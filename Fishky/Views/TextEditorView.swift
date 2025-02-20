@@ -8,7 +8,6 @@ struct ViewHeightKey: PreferenceKey {
 }
 // https://stackoverflow.com/a/69002976
 struct TextEditorView: View {
-    
     @Binding var text: String
     var hintText: String
     @State private var textEditorHeight: CGFloat = 20
