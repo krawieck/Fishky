@@ -73,6 +73,7 @@ struct FullscreenStudyView: View {
         }
         #if os(iOS)
         .overlay(alignment: .topTrailing) {
+            // TODO: use https://github.com/Aeastr/NotchMyProblem here
             Button("Dismiss", systemImage: "xmark") { dismiss() }
                 .tint(.secondary)
                 .font(.system(size: 20))

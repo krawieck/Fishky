@@ -5,6 +5,7 @@ import SwiftData
 
 struct Card: View {
     let text: String
+    let imageData: Data?
     
     @Binding var degree: Double
     
@@ -14,16 +15,26 @@ struct Card: View {
             .shadow(color: .black.opacity(0.2), radius: 5)
             .aspectRatio(2/3, contentMode: .fit)
             .overlay {
-                Text(text)
-                    .colorScheme(.light)
+                VStack {
+                    Text(text)
+                        .colorScheme(.light)
+                    if let frontImageData = imageData,
+                       let uiImage = UIImage(data: frontImageData) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .clipShape(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)))
+                            
+                    }
+                }.padding()
             }
             .rotation3DEffect(Angle(degrees: degree), axis: (x: 0, y: 10, z: 0))
     }
 }
 
 extension Card {
-    init(_ text: String, degree: Binding<Double>) {
-        self.init(text: text, degree: degree)
+    init(_ text: String, imageData: Data?, degree: Binding<Double>) {
+        self.init(text: text, imageData: imageData, degree: degree)
     }
 }
 
@@ -42,8 +53,8 @@ struct FlashcardStudyView: View {
 
     var body: some View {
         ZStack {
-            Card(flashcard.frontText, degree: $frontDegree)
-            Card(flashcard.backText, degree: $backDegree)
+            Card(flashcard.frontText, imageData: flashcard.frontImage, degree: $frontDegree)
+            Card(flashcard.backText, imageData: flashcard.backImage, degree: $backDegree)
         }.onChange(of: flipped, flipHandler)
     }
 

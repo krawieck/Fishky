@@ -9,6 +9,7 @@ struct FishkyApp: App {
         WindowGroup("Fishky", id: "main") {
             ContentView()
                 .toolbar(removing: .title)
+//                .presentedWindowToolbarStyle(.unified)
         }
         .modelContainer(modelContainer)
         WindowGroup("Deck", id: "deck", for: Deck.ID.self) { $deckId in
@@ -31,16 +32,16 @@ struct FishkyApp: App {
                 #if os(macOS)
                     .toolbar(removing: .title)
                     .toolbarBackground(.hidden, for: .windowToolbar)
+                    
                 #endif
             } else {
                 ContentUnavailableView {
-                    Label("Deck not found", systemImage: "xmark")
+                    Label("Deck not found", systemImage: "-")
                 } description: {
                     Text("This deck does not exist")
                 }
             }
         }.defaultSize(width: 600, height: 400)
-        
 //        .windowToolbarStyle(.unifiedCompact(showsTitle: false))
         .modelContainer(modelContainer)
     }

@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 import SwiftData
 
 // MARK: DeleteButton
@@ -17,39 +18,73 @@ struct FlashcardEditTile: View {
     @Bindable var flashcard: Flashcard
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var context
+    let isActive: Bool
     #if os(iOS)
         @Environment(\.editMode) var editMode
         private var isEditing: Bool {
             editMode?.wrappedValue.isEditing ?? false
         }
     #endif
-    @State var confirmDeletion = false
-
-    init(flashcard: Flashcard, inactive: Bool = false) {
+    
+    @State var frontIsTargeted: Bool = false
+    @State var backIsTargeted: Bool = false
+    
+    init(flashcard: Flashcard, isActive: Bool) {
         _flashcard = Bindable(flashcard)
-        self.inactive = inactive
+        self.isActive = isActive
+//        self.selection = []
     }
 
+    var dropHoverPreview: some View {
+        ZStack {
+            HStack {
+                Image(systemName: "photo.badge.plus")
+                Text("Drop image here")
+                
+            }.frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .padding()
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
+    }
+    
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack {
-                TextEditorView(text: $flashcard.frontText,
-                               hintText: "front")
+                TextEditorViewRepresentable(text: $flashcard.frontText)
+//                TextEditorView(text: $flashcard.frontText,
+//                               hintText: "front", isActive: isActive)
+//                .overlay {
+//                    if frontIsTargeted {
+//                        dropHoverPreview
+//                    }
+//                }
+//                .onDrop(of: [.image], isTargeted: $frontIsTargeted) { providers in
+//                    return false
+//                }
+                FlashcardPickerOrImage(flashcard: flashcard, side: .front)
+                // ------------------------------------------------------------------------------
                 DashedLine()
+                // ------------------------------------------------------------------------------
                 TextEditorView(text: $flashcard.backText,
-                               hintText: "back")
+                               hintText: "back", isActive: isActive)
+                .onDrop(of: [.image], isTargeted: $backIsTargeted) { providers in
+                    return false
+                }
+                .overlay {
+                    if backIsTargeted {
+                        dropHoverPreview
+                    }
+                }
+                FlashcardPickerOrImage(flashcard: flashcard, side: .back)
+               
             }
             .padding()
             .background(.background)
             .addBorder(.gray.opacity(colorScheme == .dark ? 0.5 : 0.5), cornerRadius: 15)
+            
+            
+            
         }
-        #if os(iOS)
-        .onChange(of: isEditing) {
-            if !isEditing {
-                confirmDeletion = false
-            }
-        }
-        #endif
     }
     
     func deleteFlashcard(_ flashcard: Flashcard) {
@@ -97,7 +132,7 @@ struct Line: Shape {
     @Previewable @Query var flashcards: [Flashcard]
     NavigationStack {
         ScrollView {
-            FlashcardEditTile(flashcard: flashcards.first!)
+            FlashcardEditTile(flashcard: flashcards.first!, isActive: true)
                 .safeAreaPadding(.all)
             
         }.toolbar {
@@ -109,5 +144,5 @@ struct Line: Shape {
 }
 
 #Preview {
-    FlashcardEditTile(flashcard: Flashcard(index: 0, front: "", back: "")).padding()
+    FlashcardEditTile(flashcard: Flashcard(index: 0, front: "", back: ""), isActive: true).padding()
 }

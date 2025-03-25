@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import SwiftData
+import PhotosUI
 import os
 
 //#if os(macOS)
@@ -36,6 +37,8 @@ import os
 //}
 //#endif
 
+
+
 protocol Ordered {
     var order: Int { get set }
 }
@@ -46,6 +49,10 @@ enum KnowlegeLevel {
 
 @Model
 final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
+    enum Side {
+        case front, back
+    }
+    
     @Attribute(originalName: "index")
     var order: Int
     
@@ -68,7 +75,37 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
     }
     
     
-    // MARK: OPERATIONS 
+    func updateImage(onThe side: Side, with item: PhotosPickerItem) async {
+        print("gonna add this image")
+        if let data = try? await item.loadTransferable(type: Data.self) {
+            print("data size: \(data.count) bytes")
+            switch side {
+                case .back:
+                print("update on back")
+                backImage = data
+                break
+            case .front:
+                print("update on front")
+                frontImage = data
+                break
+            }
+        }
+        print("finished adding image:)")
+    }
+
+    func removeImage(onThe side: Side) {
+        switch side {
+            case .back:
+            backImage = nil
+            break
+        case .front:
+            frontImage = nil
+            break
+        }
+    
+    }
+    
+    // MARK: OPERATIONS
     func deckUpdated() {
         if let deck {
             deck.deckUpdated()

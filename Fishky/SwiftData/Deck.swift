@@ -57,7 +57,7 @@ extension Deck {
             return
         }
         
-        let logger = Logger()
+//        let logger = Logger()
 //        logger.info("from=\(from), to=\(to)")
 //        logger.info("start = min(\(from.min()!), \(to))")
         let clampedTo = min(flashcards.count - 1, to)

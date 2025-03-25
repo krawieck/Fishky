@@ -97,31 +97,34 @@ struct FlashcardListView: View {
                     }
                     #endif
                     
-                    #if os(iOS)
-                    FlashcardEditTile(flashcard: flashcard, inactive: isEditing)
-                        .onTapGesture {
-                            print("GESTURE RECOGNIZEd")
-                            
-                            if isEditing {
-                                toggleSelection(flashcard)
-                            }
-                        }
+//                    #if os(iOS)
+//                    FlashcardEditTile(flashcard: flashcard)
+//                        .onTapGesture {
+//                            print("GESTURE RECOGNIZEd")
+//                            
+//                            if isEditing {
+//                                toggleSelection(flashcard)
+//                            }
+//                        }
+//                        .overlay {
+//                            if debugShowIndex {
+//                                Text("\(flashcard.order)")
+//                            }
+//                        }
+//                    #else
+                    FlashcardEditTile(flashcard: flashcard, isActive: reorderedFlashcard != nil)
                         .overlay {
                             if debugShowIndex {
                                 Text("\(flashcard.order)")
                             }
                         }
-                    #else
-                    FlashcardEditTile(flashcard: flashcard)
-                        .overlay {
-                            if debugShowIndex {
-                                Text("\(flashcard.order)")
-                            }
+                        .onChange(of: reorderedFlashcard) { oldValue, newValue in
+                            print("ACTIVE FLASHCARD: \(newValue)")
                         }
-                    #endif
+//                    #endif
 //                        .id(flashcard.id)
 //                        .listRowSeparator(.hidden)
-                        
+                          
                     #if os(iOS)
                     if isEditing {
                         Image(systemName: "line.3.horizontal").opacity(0.5)

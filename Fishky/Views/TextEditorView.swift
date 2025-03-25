@@ -1,4 +1,7 @@
 import SwiftUI
+import UniformTypeIdentifiers
+import os.log
+
 
 struct ViewHeightKey: PreferenceKey {
     static var defaultValue: CGFloat { 0 }
@@ -11,6 +14,7 @@ struct TextEditorView: View {
     @Binding var text: String
     var hintText: String
     @State private var textEditorHeight: CGFloat = 20
+    let isActive: Bool
     
     var body: some View {
         ZStack(alignment: .leading) {
@@ -24,7 +28,7 @@ struct TextEditorView: View {
                 })
             TextEditor(text: $text)
                 .font(.system(.body))
-                .frame(height: max(10,textEditorHeight))
+                .frame(height: max(10, textEditorHeight))
                 .scrollDisabled(true)
                 .background(.clear)
             if text.isEmpty {
@@ -34,7 +38,10 @@ struct TextEditorView: View {
                     .padding([.leading], 5)
             }
             
-        }.onPreferenceChange(ViewHeightKey.self) { textEditorHeight = $0 }
+        }.onPreferenceChange(ViewHeightKey.self) {
+            textEditorHeight = $0
+            logger.info("CHANGE: \($0)")
+        }
         
     }
     
@@ -43,6 +50,8 @@ struct TextEditorView: View {
 #Preview {
     @Previewable @State var text: String = ""
     
-    TextEditorView(text: $text, hintText: "test")
+    TextEditorView(text: $text, hintText: "test", isActive: true)
         .padding()
 }
+
+fileprivate let logger = Logger(subsystem: "TextEditorView", category: "")
