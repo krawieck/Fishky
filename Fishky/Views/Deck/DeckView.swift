@@ -103,12 +103,16 @@ struct DeckView: View {
             }
         }
 #endif
+        .sensoryFeedback(.impact(flexibility: .soft), trigger: studyMode, condition: { oldValue, newValue in
+            newValue 
+        })
 #if os(iOS)
         .scrollDismissesKeyboard(.interactively)
         .navigationBarTitleDisplayMode(.inline)
         .fullScreenCover(isPresented: $studyMode) {
             FullscreenStudyView(deck: deck)
         }
+        
 #endif
         .onDisappear {
             withAnimation {

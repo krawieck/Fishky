@@ -65,6 +65,7 @@ struct FullscreenStudyView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State var state: FullscreenStudyState
+    @State var closeDeck: Bool = false
     
     init(deck: Deck) {
         logger.info("fake INIT")
@@ -103,6 +104,44 @@ struct FullscreenStudyView: View {
 //                            -20
 //                        })
                         .containerRelativeFrame([.horizontal, .vertical])
+                    }
+                    if !state.waitingForInit{
+                        VStack {
+                            Spacer()
+                            Image(systemName: "face.smiling")
+                                .font(.callout)
+                                .foregroundStyle(.black)
+                            Text("you are done with this deck")
+                                .font(.headline)
+                                .foregroundStyle(.black)
+                                .padding()
+                            Spacer()
+                            HStack {
+                                Button {
+                                    closeDeck = true
+                                    dismiss()
+                                } label: {
+                                    Text("Close")
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 40)
+                                }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(.green)
+                                    .sensoryFeedback(.success, trigger: closeDeck)
+                                    .padding()
+                            }
+                            
+                            
+                        }
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 15, style: .circular))
+                        .shadow(color: .black.opacity(0.2), radius: 5)
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .padding(20)
+                        .containerRelativeFrame([.horizontal, .vertical])
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .padding()
+                        .padding(.bottom, -5)  
                     }
                 }
                 .scrollTargetLayout()
