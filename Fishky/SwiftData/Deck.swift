@@ -24,6 +24,23 @@ final class Deck: Hashable, CustomStringConvertible, Identifiable {
         "Deck(name: \(name), icon: \(icon), timeCreated: \(timeCreated), timeUpdated: \(timeUpdated), flashcards: \(String(describing: flashcards))"
     }
     
+    var percentageComplete: Double {
+        flashcards
+            .map {
+                switch $0.knowledgeData?.level {
+                case .low:
+                    0.1
+                case .medium:
+                    0.6
+                case .high:
+                    1.0
+                case nil:
+                    0.0
+                }
+            }.reduce(0, +) / Double(flashcards.count)
+    }
+    
+    
     func deckUpdated() {
         self.timeUpdated = .now
     }

@@ -4,16 +4,30 @@ import SwiftData
 struct DeckListItem: View {
     var deck: Deck
     
+    var percentageColor: Color {
+        let percentage = deck.percentageComplete
+        
+        return if percentage < 0.2 {
+            .red
+        } else if percentage < 0.95 {
+            .orange
+        } else {
+            .green
+        }
+    }
+    
     var body: some View {
         NavigationLink(value: deck) {
-            if deck.name.isEmpty {
-                HStack {
+            VStack(alignment: .leading) {
+                if deck.name.isEmpty {
                     Text("Untitled deck").italic().foregroundColor(.gray)
-                }
-            } else {
-                HStack {
+                } else {
                     Text(deck.name)
                 }
+                HStack {
+                    Text("\(Int(deck.percentageComplete * 100))% complete")
+                        .foregroundStyle(percentageColor)
+                }.textScale(.secondary)
             }
         }
     }
