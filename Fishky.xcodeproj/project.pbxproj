@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,8 @@
 		7B0433182A3E6F9A005A2B41 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B0433172A3E6F9A005A2B41 /* Preview Assets.xcassets */; };
 		7B0433212A3E74C2005A2B41 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0433202A3E74C2005A2B41 /* Deck.swift */; };
 		7B0433232A3E75D1005A2B41 /* Flashcard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0433222A3E75D1005A2B41 /* Flashcard.swift */; };
+		7B056CAE2DAE8414007CE8EB /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 7B056CAD2DAE8414007CE8EB /* CropViewController */; };
+		7B056CB02DAE8414007CE8EB /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 7B056CAF2DAE8414007CE8EB /* TOCropViewController */; };
 		7B25EB662D2EBC14009BBF9E /* FlashcardStudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B25EB652D2EBC03009BBF9E /* FlashcardStudyView.swift */; };
 		7B351B952D02167D00DA597F /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B351B942D02167B00DA597F /* DataModel.swift */; };
 		7B351B972D02175F00DA597F /* DeckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B351B962D02175B00DA597F /* DeckListView.swift */; };
@@ -21,12 +23,17 @@
 		7B557BBE2A52BD3B00A5DE26 /* DeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B557BBD2A52BD3B00A5DE26 /* DeckView.swift */; };
 		7B557BC12A52C2F900A5DE26 /* PreviewSampleDataOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B557BC02A52C2F900A5DE26 /* PreviewSampleDataOld.swift */; };
 		7B557BC32A52CAAA00A5DE26 /* NewFlashcardButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B557BC22A52CAAA00A5DE26 /* NewFlashcardButton.swift */; };
-		7B557BC52A52CAEE00A5DE26 /* FlashcardEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B557BC42A52CAEE00A5DE26 /* FlashcardEditView.swift */; };
+		7B557BC52A52CAEE00A5DE26 /* FlashcardEditTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B557BC42A52CAEE00A5DE26 /* FlashcardEditTile.swift */; };
+		7B5CBAD62D9EA70C00691DE9 /* KnowlegeButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5CBAD52D9EA70900691DE9 /* KnowlegeButtons.swift */; };
+		7B7B5CC02D87469E002634A9 /* FlashcardPreviewTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B5CBF2D874698002634A9 /* FlashcardPreviewTile.swift */; };
+		7B80B3182D7DC76800A078FC /* FlashcardImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B80B3172D7DC76400A078FC /* FlashcardImage.swift */; };
 		7B942ADC2CF37B3F00F1E853 /* FullscreenStudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B942ADB2CF37B3400F1E853 /* FullscreenStudyView.swift */; };
+		7BB30E8C2D53C8C6008CC123 /* ReorderableForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB30E8B2D53C8BD008CC123 /* ReorderableForEach.swift */; };
 		7BB573762D07476C0005C24D /* FlashcardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB573752D0747640005C24D /* FlashcardListView.swift */; };
 		7BB6259A2C84BA0800ACC242 /* ModelPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB625992C84BA0800ACC242 /* ModelPreview.swift */; };
 		7BDA0AA52CF5FC5600DDDDD6 /* TextEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BDA0AA42CF5FC5200DDDDD6 /* TextEditorView.swift */; };
 		7BE65BF02D03676F00716307 /* EmojiDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE65BEF2D03676900716307 /* EmojiDetection.swift */; };
+		7BE9D79D2D525FC7007CE6CD /* AdaptiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE9D79C2D525FC1007CE6CD /* AdaptiveList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,19 +54,30 @@
 		7B557BBD2A52BD3B00A5DE26 /* DeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckView.swift; sourceTree = "<group>"; };
 		7B557BC02A52C2F900A5DE26 /* PreviewSampleDataOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSampleDataOld.swift; sourceTree = "<group>"; };
 		7B557BC22A52CAAA00A5DE26 /* NewFlashcardButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewFlashcardButton.swift; sourceTree = "<group>"; };
-		7B557BC42A52CAEE00A5DE26 /* FlashcardEditView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlashcardEditView.swift; sourceTree = "<group>"; };
+		7B557BC42A52CAEE00A5DE26 /* FlashcardEditTile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlashcardEditTile.swift; sourceTree = "<group>"; };
+		7B5CBAD52D9EA70900691DE9 /* KnowlegeButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowlegeButtons.swift; sourceTree = "<group>"; };
+		7B7B5CBF2D874698002634A9 /* FlashcardPreviewTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardPreviewTile.swift; sourceTree = "<group>"; };
+		7B80B3172D7DC76400A078FC /* FlashcardImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardImage.swift; sourceTree = "<group>"; };
 		7B942ADB2CF37B3400F1E853 /* FullscreenStudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenStudyView.swift; sourceTree = "<group>"; };
+		7BB30E8B2D53C8BD008CC123 /* ReorderableForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableForEach.swift; sourceTree = "<group>"; };
 		7BB573752D0747640005C24D /* FlashcardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashcardListView.swift; sourceTree = "<group>"; };
 		7BB625992C84BA0800ACC242 /* ModelPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPreview.swift; sourceTree = "<group>"; };
 		7BDA0AA42CF5FC5200DDDDD6 /* TextEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditorView.swift; sourceTree = "<group>"; };
 		7BE65BEF2D03676900716307 /* EmojiDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiDetection.swift; sourceTree = "<group>"; };
+		7BE9D79C2D525FC1007CE6CD /* AdaptiveList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7B7B5CC12D874DCF002634A9 /* TextEditorView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TextEditorView; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7B0433072A3E6F99005A2B41 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B056CB02DAE8414007CE8EB /* TOCropViewController in Frameworks */,
+				7B056CAE2DAE8414007CE8EB /* CropViewController in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +137,7 @@
 		7B557BBA2A52BCFC00A5DE26 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7B7B5CC12D874DCF002634A9 /* TextEditorView */,
 				7BB573712D0746F90005C24D /* Home */,
 				7BB573722D0747120005C24D /* Deck */,
 				7B9310CC2D0F1F49008BDCBC /* Study */,
@@ -130,6 +149,8 @@
 		7B557BBF2A52C2C900A5DE26 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				7BB30E8B2D53C8BD008CC123 /* ReorderableForEach.swift */,
+				7BE9D79C2D525FC1007CE6CD /* AdaptiveList.swift */,
 				7BE65BEF2D03676900716307 /* EmojiDetection.swift */,
 				7B557BC02A52C2F900A5DE26 /* PreviewSampleDataOld.swift */,
 				7BB625992C84BA0800ACC242 /* ModelPreview.swift */,
@@ -140,6 +161,7 @@
 		7B9310CC2D0F1F49008BDCBC /* Study */ = {
 			isa = PBXGroup;
 			children = (
+				7B5CBAD52D9EA70900691DE9 /* KnowlegeButtons.swift */,
 				7B942ADB2CF37B3400F1E853 /* FullscreenStudyView.swift */,
 				7B25EB652D2EBC03009BBF9E /* FlashcardStudyView.swift */,
 			);
@@ -161,7 +183,9 @@
 			children = (
 				7B557BBD2A52BD3B00A5DE26 /* DeckView.swift */,
 				7BB573752D0747640005C24D /* FlashcardListView.swift */,
-				7B557BC42A52CAEE00A5DE26 /* FlashcardEditView.swift */,
+				7B557BC42A52CAEE00A5DE26 /* FlashcardEditTile.swift */,
+				7B7B5CBF2D874698002634A9 /* FlashcardPreviewTile.swift */,
+				7B80B3172D7DC76400A078FC /* FlashcardImage.swift */,
 				7B557BC22A52CAAA00A5DE26 /* NewFlashcardButton.swift */,
 			);
 			path = Deck;
@@ -182,8 +206,13 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				7B7B5CC12D874DCF002634A9 /* TextEditorView */,
+			);
 			name = Fishky;
 			packageProductDependencies = (
+				7B056CAD2DAE8414007CE8EB /* CropViewController */,
+				7B056CAF2DAE8414007CE8EB /* TOCropViewController */,
 			);
 			productName = Fishky;
 			productReference = 7B04330A2A3E6F99005A2B41 /* Fishky.app */;
@@ -214,6 +243,7 @@
 			);
 			mainGroup = 7B0433012A3E6F99005A2B41;
 			packageReferences = (
+				7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 			);
 			productRefGroup = 7B04330B2A3E6F99005A2B41 /* Products */;
 			projectDirPath = "";
@@ -243,21 +273,26 @@
 			files = (
 				7B351B9C2D021A5300DA597F /* PreviewSampleData.swift in Sources */,
 				7B0433212A3E74C2005A2B41 /* Deck.swift in Sources */,
+				7B5CBAD62D9EA70C00691DE9 /* KnowlegeButtons.swift in Sources */,
 				7BE65BF02D03676F00716307 /* EmojiDetection.swift in Sources */,
 				7B25EB662D2EBC14009BBF9E /* FlashcardStudyView.swift in Sources */,
+				7B80B3182D7DC76800A078FC /* FlashcardImage.swift in Sources */,
 				7B942ADC2CF37B3F00F1E853 /* FullscreenStudyView.swift in Sources */,
 				7B557BC32A52CAAA00A5DE26 /* NewFlashcardButton.swift in Sources */,
+				7BB30E8C2D53C8C6008CC123 /* ReorderableForEach.swift in Sources */,
 				7B0433232A3E75D1005A2B41 /* Flashcard.swift in Sources */,
 				7B351B992D0217E500DA597F /* DeckListItem.swift in Sources */,
 				7BB573762D07476C0005C24D /* FlashcardListView.swift in Sources */,
 				7B04330E2A3E6F99005A2B41 /* FishkyApp.swift in Sources */,
 				7B557BC12A52C2F900A5DE26 /* PreviewSampleDataOld.swift in Sources */,
+				7B7B5CC02D87469E002634A9 /* FlashcardPreviewTile.swift in Sources */,
 				7B351B952D02167D00DA597F /* DataModel.swift in Sources */,
 				7BB6259A2C84BA0800ACC242 /* ModelPreview.swift in Sources */,
 				7B0433122A3E6F99005A2B41 /* ContentView.swift in Sources */,
 				7BDA0AA52CF5FC5600DDDDD6 /* TextEditorView.swift in Sources */,
+				7BE9D79D2D525FC7007CE6CD /* AdaptiveList.swift in Sources */,
 				7B557BBE2A52BD3B00A5DE26 /* DeckView.swift in Sources */,
-				7B557BC52A52CAEE00A5DE26 /* FlashcardEditView.swift in Sources */,
+				7B557BC52A52CAEE00A5DE26 /* FlashcardEditTile.swift in Sources */,
 				7B351B972D02175F00DA597F /* DeckListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,7 +443,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
@@ -416,7 +451,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.krawieck.Fishky;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -450,7 +486,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
@@ -458,7 +494,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.krawieck.Fishky;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -487,6 +524,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TimOliver/TOCropViewController";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7B056CAD2DAE8414007CE8EB /* CropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = CropViewController;
+		};
+		7B056CAF2DAE8414007CE8EB /* TOCropViewController */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */;
+			productName = TOCropViewController;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7B0433022A3E6F99005A2B41 /* Project object */;
 }
