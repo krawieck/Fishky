@@ -64,6 +64,19 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
         "Flashcard(index: \(order), frontText: \(frontText), backText: \(backText))"
     }
     
+    var knowlegeColor: Color {
+        switch knowlegeData?.level {
+        case .low:
+            .red
+        case .medium:
+            .yellow
+        case .high:
+            .green
+        case nil:
+            .clear
+        }
+    }
+    
     
     func updateImage(onThe side: Side, with item: PhotosPickerItem) async {
         logger.info("gonna add this image")
