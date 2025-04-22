@@ -34,7 +34,7 @@ struct KnowlegeButtons: View {
             }.buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
                 .tint(newKnowlege != nil && newKnowlege != .low ? .gray : .red)
-        }
+        }.sensoryFeedback(.impact, trigger: newKnowlege)
     }
     
     func updateKnowlege(_ knowlegeLevel: KnowlegeLevel, for flashcard: Flashcard) {

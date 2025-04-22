@@ -34,9 +34,11 @@ class FlashcardListState {
     }
     
     func deleteFlashcards() {
-        logger.info("delete flashcards")
-        deck.deleteFlashcards(selectedFlashcards)
-        selectedFlashcards.removeAll()
+        withAnimation {
+            logger.info("delete flashcards")
+            deck.deleteFlashcards(selectedFlashcards)
+            selectedFlashcards.removeAll()
+        }
     }
     func deleteFlashcard(_ flashcard: Flashcard) {
         logger.info("delete flashcard")
@@ -110,7 +112,7 @@ struct FlashcardListView: View {
                                 Image(systemName: "circle")
                             }
                             
-                        }
+                        }.sensoryFeedback(.selection, trigger: state.selectedFlashcards)
                     }
                     #endif
                     
@@ -131,15 +133,13 @@ struct FlashcardListView: View {
                         FlashcardPreviewTile(flashcard: flashcard)
                             .matchedGeometryEffect(id: flashcard, in: animation)
                     }
-                   
+                    
                           
                     #if os(iOS)
                     if isEditing {
                         Image(systemName: "line.3.horizontal").opacity(0.5)
                     }
                     #endif
-                    
-                    
                 }.onTapGesture {
                     state.toggleSelection(flashcard)
                 }
@@ -151,9 +151,7 @@ struct FlashcardListView: View {
             if isEditing {
                 ToolbarItemGroup(placement: .bottomBar) {
                     Button(role: .destructive) {
-                        withAnimation {
-                            state.deleteFlashcards()
-                        }
+                        state.deleteFlashcards()
                     } label: {
                         Label("Delete", systemImage: "trash")
                     }.disabled(state.selectedFlashcards.isEmpty)

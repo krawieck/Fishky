@@ -53,9 +53,6 @@ struct DeckView: View {
                 .font(.largeTitle.bold())
                 .listRowSeparator(.hidden)
             FlashcardListView(deck)
-//                .navigationTitle($deck.name)
-            
-            
             // TODO: move this to FlashcardListView so that it changes size based on the list type
             NewFlashcardButton {
                 withAnimation(.bouncy) {
@@ -68,8 +65,6 @@ struct DeckView: View {
             
         }
         .contentMargins(12, for: .scrollContent)
-//        .navigationTitle($deck.name)
-//        .navigationTitle("testing")
         .toolbar {
 #if os(macOS)
             ToolbarItem(placement: .principal) {
@@ -116,7 +111,6 @@ struct DeckView: View {
         }
 #endif
         .onDisappear {
-            let logger = Logger()
             withAnimation {
                 
                 do {
@@ -167,3 +161,5 @@ extension DeckView {
 #Preview("StudyButton") {
     StudyButton {}
 }
+
+fileprivate let logger = Logger(subsystem: "DeckView", category: "Views/Deck")

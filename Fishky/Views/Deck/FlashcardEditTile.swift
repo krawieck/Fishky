@@ -25,36 +25,16 @@ struct FlashcardEditTile: View {
         }
     #endif
     
-    @State var frontIsTargeted: Bool = false
-    @State var backIsTargeted: Bool = false
-    
     init(flashcard: Flashcard) {
         _flashcard = Bindable(flashcard)
-//        self.selection = []
     }
 
-    var dropHoverPreview: some View {
-        ZStack {
-            HStack {
-                Image(systemName: "photo.badge.plus")
-                Text("Drop image here")
-                
-            }.frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .padding()
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
-    }
-    
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack {
                 TextEditorView(text: $flashcard.frontText,
                                hintText: "front")
-                .overlay {
-                    if frontIsTargeted {
-                        dropHoverPreview
-                    }
-                }
              
                 FlashcardPickerOrImage(flashcard: flashcard, side: .front)
                 // ----------------------------------------------------------
@@ -62,14 +42,6 @@ struct FlashcardEditTile: View {
                 // ----------------------------------------------------------
                 TextEditorView(text: $flashcard.backText,
                                hintText: "back")
-                .onDrop(of: [.image], isTargeted: $backIsTargeted) { providers in
-                    return false
-                }
-                .overlay {
-                    if backIsTargeted {
-                        dropHoverPreview
-                    }
-                }
                 FlashcardPickerOrImage(flashcard: flashcard, side: .back)
             }
             .padding()

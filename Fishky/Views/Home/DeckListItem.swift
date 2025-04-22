@@ -14,7 +14,6 @@ struct DeckListItem: View {
                 HStack {
                     Text(deck.name)
                 }
-                
             }
         }
     }
