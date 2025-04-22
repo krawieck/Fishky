@@ -43,8 +43,30 @@ protocol Ordered {
     var order: Int { get set }
 }
 
-enum KnowlegeLevel {
-    case high, low, medium
+enum KnowlegeLevel: Int, Codable, CustomDebugStringConvertible {
+    var debugDescription: String {
+        switch self {
+            case .low:
+                return ".low"
+            case .medium: 
+                return ".medium"
+            case .high: 
+                return ".high"
+        }
+    }
+    
+    case low = 0
+    case medium = 1
+    case high = 2
+}
+
+struct KnowlegeData: Codable, CustomDebugStringConvertible {
+    var debugDescription: String {
+        "KnowlegeData(\(expires), \(level))"
+    }
+    
+    let expires: Date
+    let level: KnowlegeLevel
 }
 
 @Model
@@ -61,13 +83,16 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
     @Attribute(.externalStorage) var backImage: Data?
     @Attribute(.externalStorage) var frontImage: Data?
     
+    var knowlegeData: KnowlegeData?
+    
     var deck: Deck?
     
-    init(index: Int, front: String = "", back: String = "") {
+    init(index: Int, front: String = "", back: String = "", knowlegeData: KnowlegeData? = nil) {
         self.frontText = front
         self.backText = back
         
         self.order = index
+        self.knowlegeData = knowlegeData
     }
     
     var description: String {
@@ -102,7 +127,12 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
             frontImage = nil
             break
         }
+    }
     
+    func updateKnowlege(_ knowlegeLevel: KnowlegeLevel, expires: Date? = nil) {
+        knowlegeData = KnowlegeData(expires: expires ?? Date(timeInterval: knowlegeExpiryTime, since: Date.now), level: knowlegeLevel)
+        
+        logger.info("knowlege updated for flashcard \(self.order) \(self.knowlegeData?.level.rawValue ?? -1)")
     }
     
     // MARK: OPERATIONS
@@ -128,3 +158,5 @@ extension Flashcard {
         ]
     }
 }
+
+fileprivate let logger = Logger(subsystem: "Flashcard", category: "SwiftData")

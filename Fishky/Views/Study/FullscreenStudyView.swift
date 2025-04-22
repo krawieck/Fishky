@@ -1,5 +1,48 @@
 import SwiftUI
 import SwiftData
+import os.log
+
+@Observable
+class FullscreenStudyState {
+    var deck: Deck
+    var flashcards: [Flashcard] = []
+    var currentIndex: Int = 0
+    var flipped: [Bool] = []
+    var showButtons: [Bool] = []
+    var waitingForInit: Bool = true
+    
+    var currentFlashcard: Flashcard { flashcards[currentIndex] }
+    var noFlashcards: Bool { deck.flashcards.isEmpty }
+    
+    init(for deck: Deck) {
+        self.deck = deck
+    }
+    
+    func initialize() {
+        logger.info("real INIT")
+        deck.applyKnowlegeAtrophy()
+        let shuffledFlashcards = deck.shuffledFlashcards()
+        let flipped = Array(repeating: false, count: shuffledFlashcards.count)
+        let showButtons = Array(repeating: false, count: shuffledFlashcards.count)
+        
+        self.flashcards = shuffledFlashcards
+        self.flipped = flipped
+        self.showButtons = showButtons
+        waitingForInit = false
+    }
+    
+    func flipFlashcard(_ index: Int) {
+        flipped[index].toggle()
+        withAnimation(.default.delay(0.2)) {
+            showButtons[index] = true
+        }
+    }
+    
+    /// returns the desired opacity for buttons for a particular flashcard
+    func opacityOfButtons(for index: Int) -> Double {
+        return showButtons[index] ? 1 : 0
+    }
+}
 
 
 extension FullscreenStudyView {
@@ -21,38 +64,45 @@ extension FullscreenStudyView {
 struct FullscreenStudyView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @Bindable var deck: Deck
-    @State var flashcards: [Flashcard]
-    @State var currentIndex: Int = 0
-    @State var flipped: [Bool]
-    
-    var currentFlashcard: Flashcard { flashcards[currentIndex] }
+    @State var state: FullscreenStudyState
     
     init(deck: Deck) {
-        self.deck = deck
-        let shuffledFlashcards = deck.flashcards.shuffled()
-        let flipped = Array(repeating: false, count: shuffledFlashcards.count)
-        
-        self.flashcards = shuffledFlashcards
-        self.flipped = flipped
+        logger.info("fake INIT")
+        self.state = FullscreenStudyState(for: deck)
     }
     init(for id: Deck.ID, with context: ModelContext) {
         let deck = context.model(for: id) as! Deck
         self.init(deck: deck)
     }
     
+    
+    // MARK: Body
+    
     var body: some View {
+        if state.waitingForInit {
+            EmptyView()
+        }
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    ForEach(Array(flashcards.enumerated()), id: \.element) { index, flashcard in
-                        FlashcardStudyView(flashcard: flashcard, flipped: $flipped[index])
-                            .padding()
-                            .containerRelativeFrame([.horizontal, .vertical])
-                            .aspectRatio(2/3, contentMode: .fit)
-                            .onTapGesture {
-                                flipped[index].toggle()
-                            }
+                    ForEach(Array(state.flashcards.enumerated()), id: \.element) { index, flashcard in
+                        VStack {
+                            FlashcardStudyView(flashcard: flashcard, flipped: $state.flipped[index])
+                                .aspectRatio(2/3, contentMode: .fit)
+                                .padding()
+                                .padding(.bottom, -5)
+                                .onTapGesture {
+                                    state.flipFlashcard(index)
+                                }
+                            KnowlegeButtons(flashcard)
+                                .opacity(state.opacityOfButtons(for: index))
+                        }
+                        // TODO: fix alignment
+//                        .alignmentGuide(, computeValue: { d in -20 })
+//                        .alignmentGuide(HorizontalAlignment.center, computeValue: { d in
+//                            -20
+//                        })
+                        .containerRelativeFrame([.horizontal, .vertical])
                     }
                 }
                 .scrollTargetLayout()
@@ -63,13 +113,16 @@ struct FullscreenStudyView: View {
             .background(Color.blue.opacity(0.6))
         }
         .overlay {
-            if flashcards.isEmpty {
+            if state.noFlashcards && !state.waitingForInit {
                 ContentUnavailableView {
                     Label("No flashcards", systemImage: "book.pages")
                 } description: {
                     Text("Deck needs to contain at least one flashcard to study")
                 }
             }
+        }
+        .task {
+            state.initialize()
         }
         #if os(iOS)
         .overlay(alignment: .topTrailing) {
@@ -84,7 +137,11 @@ struct FullscreenStudyView: View {
                 .padding(.horizontal, 15)
         }
         #endif
+        
     }
+    
+  
+    
 }
 
 // MARK: PREVIEW
@@ -105,3 +162,6 @@ struct FullscreenStudyView: View {
     FullscreenStudyView(deck: decks.filter { $0.flashcards.isEmpty }.last!)
 }
 
+
+
+fileprivate let logger = Logger(subsystem: "FullscreenStudyView", category: "Views/Study")

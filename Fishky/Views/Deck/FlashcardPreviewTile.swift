@@ -21,31 +21,51 @@ struct FlashcardPreviewTile: View {
     }
 
 
+    private let bottomPadding = 15.0
+    
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            VStack {
-                ZStack {
-                    TextEditorView(text: $flashcard.frontText,
-                                   hintText: "front", isActive: true)
-
+            VStack(alignment: .leading) {
+                    Text(flashcard.frontText)
+                        .multilineTextAlignment(.leading)
+                        .padding([.top], 3)
+                        .padding(5)
+                        .padding([.bottom], bottomPadding)
+                if let imageData = flashcard.frontImage,
+                   let uiImage = UIImage(data: imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)))
+                } else {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "photo.badge.plus")
+                    }.opacity(0.3)
                 }
-//                .overlay {
-//                    if frontIsTargeted {
-//                        dropHoverPreview
-//                    }
-//                }
-//                .onDrop(of: [.image], isTargeted: $frontIsTargeted) { providers in
-//                    return false
-//                }
-                FlashcardPickerOrImage(flashcard: flashcard, side: .front)
-                // ------------------------------------------------------------------------------
+                // -----------------------------
                 DashedLine()
-                // ------------------------------------------------------------------------------
-                TextEditorView(text: $flashcard.backText,
-                               hintText: "back", isActive: true)
-                FlashcardPickerOrImage(flashcard: flashcard, side: .back)
-               
+                // -----------------------------
+                Text(flashcard.backText)
+                    .multilineTextAlignment(.leading)
+                    .padding([.top], 3)
+                    .padding(5)
+                    .padding([.bottom], bottomPadding)
+
+                if let imageData = flashcard.backImage,
+                   let uiImage = UIImage(data: imageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)))
+                       
+                } else {
+                    HStack {
+                        Spacer()
+                        Image(systemName: "photo.badge.plus")
+                    }.opacity(0.3)
+                }
             }
             .padding()
             .background(.background)
@@ -62,10 +82,11 @@ struct FlashcardPreviewTile: View {
 #Preview(traits: .sampleData) {
     @Previewable @Query var flashcards: [Flashcard]
     NavigationStack {
-        ScrollView {
+        ZStack {
             FlashcardPreviewTile(flashcard: flashcards.first!)
                 .safeAreaPadding(.all)
-            
+            FlashcardEditTile(flashcard: flashcards.first!)
+                .safeAreaPadding(.all).opacity(0.2)
         }.toolbar {
             #if os(iOS)
             EditButton()

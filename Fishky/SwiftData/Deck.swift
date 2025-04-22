@@ -2,6 +2,9 @@ import Foundation
 import SwiftData
 import os
 
+private let secondsInDay: TimeInterval = 60 * 60 * 24
+let knowlegeExpiryTime: TimeInterval = secondsInDay * 7
+
 @Model
 final class Deck: Hashable, CustomStringConvertible, Identifiable {
     var name: String = ""
@@ -136,6 +139,53 @@ extension Deck {
         try? modelContext?.save()
 
     }
+    
+    /// update knowlege based on Date. downgrade the ones that are expired
+    func applyKnowlegeAtrophy() {
+        for flashcard in flashcards {
+            if let knowlegeData = flashcard.knowlegeData {
+                // if expired then either bump the level of knowlege down, or remove it
+                if knowlegeData.expires > Date.now {
+                    switch knowlegeData.level {
+                    case .low:
+                        flashcard.knowlegeData = nil
+                    case .medium:
+                        flashcard.knowlegeData = KnowlegeData(expires: Date(timeInterval: knowlegeExpiryTime, since: Date.now), level: .low)
+                    case .high:
+                        flashcard.knowlegeData = KnowlegeData(expires: Date(timeInterval: knowlegeExpiryTime, since: Date.now), level: .medium)
+                    }
+                }
+            }
+        }
+    }
+    
+    func shuffledFlashcards() -> [Flashcard] {
+        logger.info("shuffling")
+        let unranked = flashcards.filter { $0.knowlegeData == nil }.shuffled()
+        let lowKnowlege = flashcards.filter { $0.knowlegeData?.level == .low }.shuffled()
+        let mediumKnowlege = flashcards.filter { $0.knowlegeData?.level == .medium }.shuffled()
+        let highKnowlege = flashcards.filter { $0.knowlegeData?.level == .high }.shuffled()
+        
+        logger.info("""
+                    unranked: \(unranked)
+                    low: \(lowKnowlege)
+                    medium: \(mediumKnowlege)
+                    high: \(highKnowlege)
+                    """)
+        
+        logger.info("""
+                    LEN
+                    unranked: \(unranked.count)
+                    low: \(lowKnowlege.count)
+                    medium: \(mediumKnowlege.count)
+                    high: \(highKnowlege.count)
+                    """)
+        
+        
+        
+
+        return unranked + lowKnowlege + mediumKnowlege + highKnowlege
+    }
 }
 
 
@@ -154,3 +204,5 @@ extension Deck {
 
     }
 }
+
+fileprivate let logger = Logger(subsystem: "Deck", category: "SwiftData")

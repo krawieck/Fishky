@@ -2,160 +2,26 @@ import SwiftUI
 import SwiftData
 import os
 
-
-struct FlashcardFocus {
-    let flashcard: Flashcard
-    let side: FlashcardSide
+@Observable
+class FlashcardListState {
+    var deck: Deck
+    var flashcardFocus: FlashcardFocus?
     
-    enum FlashcardSide {
-        case front, back
-    }
-}
-
-
-struct FlashcardListView: View {
-    // MARK: debug variables
-    let debugShowIndex: Bool = true
-    
-    //
-    
-    @Environment(\.modelContext) var context
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
-
-#if os(iOS)
-    @Environment(\.editMode) var editMode
-    private var isEditing: Bool {
-        editMode?.wrappedValue.isEditing ?? false
-    }
-#endif
-
-    @Bindable var deck: Deck
-    @Query var flashcards: [Flashcard]
-    @State var flashcardFocus: FlashcardFocus?
-    
-    @State var reorderedFlashcard: Flashcard?
+    var reorderedFlashcard: Flashcard?
     var reorderInProgress: Bool { reorderedFlashcard != nil }
     
-    @State var selectedFlashcards: Set<Int> = []
+    var selectedFlashcards: Set<Int> = []
 
-    
-    let columns = [GridItem(.adaptive(minimum: 250, maximum: 350))]
-    func flashcardDeleteButton(_ flashcard: Flashcard) -> some View {
-        Button {
-            deleteFlashcard(flashcard)
-        } label: {
-            Image(systemName: "xmark")
-                .padding(8)
-        }.tint(.gray.opacity(0.8))
-    }
-    
-//    func keyboardToolbar() -> some View {
-//        return ToolbarItemGroup(placement: .keyboard) {
-//            Button {
-//                if let flashcardFocus {
-//                    if flashcardFocus.side == .front {
-//                        print("\(flashcardFocus.flashcard.frontText)")
-//                    } else {
-//                        print("\(flashcardFocus.flashcard.frontText)")
-//                    }
-//                }
-//            } label: {
-//                Label("Add image", systemImage: "photo.badge.plus.fill")
-//            }
-//        }
-//    }
-    
-    
-    init(_ deck: Deck) {
-        self._deck = Bindable(deck)
-        let deckId = deck.persistentModelID
-        let predicate = #Predicate<Flashcard> { flashcard in
-            flashcard.deck?.persistentModelID == deckId
-        }
-        _flashcards = Query(filter: predicate, sort: \.order)
+   
+    init(deck: Deck) {
+        self.deck = deck
     }
     
     
-    
-    var body: some View {
-        AdaptiveList {
-            ReorderableForEach(flashcards, active: $reorderedFlashcard) { flashcard in
-                HStack {
-                    #if os(iOS)
-                    if isEditing {
-                        Button {
-                            toggleSelection(flashcard)
-                        } label: {
-                            let isSelected = selectedFlashcards.contains(flashcard.order)
-                            if isSelected {
-                                Image(systemName: "checkmark.circle.fill")
-                            } else {
-                                Image(systemName: "circle")
-                            }
-                            
-                        }
-                    }
-                    #endif
-                    
-//                    #if os(iOS)
-//                    FlashcardEditTile(flashcard: flashcard)
-//                        .onTapGesture {
-//                            print("GESTURE RECOGNIZEd")
-//                            
-//                            if isEditing {
-//                                toggleSelection(flashcard)
-//                            }
-//                        }
-//                        .overlay {
-//                            if debugShowIndex {
-//                                Text("\(flashcard.order)")
-//                            }
-//                        }
-//                    #else
-                    FlashcardEditTile(flashcard: flashcard, isActive: reorderedFlashcard != nil)
-                        .overlay {
-                            if debugShowIndex {
-                                Text("\(flashcard.order)")
-                            }
-                        }
-                        .onChange(of: reorderedFlashcard) { oldValue, newValue in
-                            print("ACTIVE FLASHCARD: \(newValue)")
-                        }
-//                    #endif
-//                        .id(flashcard.id)
-//                        .listRowSeparator(.hidden)
-                          
-                    #if os(iOS)
-                    if isEditing {
-                        Image(systemName: "line.3.horizontal").opacity(0.5)
-                    }
-                    #endif
-                    
-                    
-                }
-            } moveAction: { from, to in
-                deck.moveFlashcard(from: from, to: to)
-            }
-            
-        }.toolbar {
-            #if os(iOS)
-            if isEditing {
-                ToolbarItemGroup(placement: .bottomBar) {
-                    Button(role: .destructive) {
-                        deleteFlashcards()
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }.disabled(selectedFlashcards.isEmpty)
-                }
-            }
-            #endif
-        }
+    func isSelected(flashcard: Flashcard) -> Bool {
+        selectedFlashcards.contains(flashcard.order)
     }
-}
-
-// MARK: STATE
-
-extension FlashcardListView {
+    
     func toggleSelection(_ flashcard: Flashcard) {
         let selectedIndex = selectedFlashcards.firstIndex(of: flashcard.order) ?? nil
         let isSelected = selectedIndex != nil
@@ -168,25 +34,136 @@ extension FlashcardListView {
     }
     
     func deleteFlashcards() {
-        withAnimation(.spring) {
-            let logger = Logger()
-            logger.info("delete flashcards")
-            deck.deleteFlashcards(selectedFlashcards)
-            selectedFlashcards.removeAll()
-            try? context.save()
-        }
+        logger.info("delete flashcards")
+        deck.deleteFlashcards(selectedFlashcards)
+        selectedFlashcards.removeAll()
     }
     func deleteFlashcard(_ flashcard: Flashcard) {
-        withAnimation(.spring) {
-            let logger = Logger()
-            logger.info("delete flashcard")
-            deck.deleteFlashcard(flashcard)
-            try? context.save()
-        }
+        logger.info("delete flashcard")
+        deck.deleteFlashcard(flashcard)
     }
     
     func flashcardUpdateFocus(flashcard: Flashcard, onThe side: FlashcardFocus.FlashcardSide) {
         flashcardFocus = FlashcardFocus(flashcard: flashcard, side: side)
+    }
+    
+    func moveFlashcard(from: IndexSet, to: Int) {
+        deck.moveFlashcard(from: from, to: to)
+    }
+}
+
+
+struct FlashcardFocus {
+    let flashcard: Flashcard
+    let side: FlashcardSide
+    
+    enum FlashcardSide {
+        case front, back
+    }
+}
+
+struct FlashcardListView: View {
+    // MARK: debug variables
+    let showDebugInfo: Bool = false
+    
+    @Environment(\.modelContext) var context
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
+#if os(iOS)
+    @Environment(\.editMode) var editMode
+    private var isEditing: Bool {
+        editMode?.wrappedValue.isEditing ?? false
+    }
+#endif
+
+    @Query var flashcards: [Flashcard]
+    @State var state: FlashcardListState
+    
+    @Namespace private var animation
+    
+    var reorderingEnabled: Bool { isEditing }
+    
+    let columns = [GridItem(.adaptive(minimum: 250, maximum: 350))]
+    
+
+    init(_ deck: Deck) {
+        state = FlashcardListState(deck: deck)
+        let deckId = deck.persistentModelID
+        let predicate = #Predicate<Flashcard> { flashcard in
+            flashcard.deck?.persistentModelID == deckId
+        }
+        _flashcards = Query(filter: predicate, sort: \.order)
+    }
+
+    var body: some View {
+        AdaptiveList {
+            ReorderableForEach(flashcards, active: $state.reorderedFlashcard, reorderingEnabled: reorderingEnabled) { flashcard in
+                HStack {
+                    #if os(iOS)
+                    if isEditing {
+                        Button {
+                            state.toggleSelection(flashcard)
+                        } label: {
+                            if state.isSelected(flashcard: flashcard) {
+                                Image(systemName: "checkmark.circle.fill")
+                            } else {
+                                Image(systemName: "circle")
+                            }
+                            
+                        }
+                    }
+                    #endif
+                    
+                    if !isEditing {
+                        FlashcardEditTile(flashcard: flashcard)
+                            .overlay {
+                                if showDebugInfo {
+                                    Text("""
+                                    order: \(flashcard.order)
+                                    \(String(describing: flashcard.knowlegeData))
+                                    """
+                                    )
+                                }
+                            }
+                            .matchedGeometryEffect(id: flashcard, in: animation)
+                        
+                    } else {
+                        FlashcardPreviewTile(flashcard: flashcard)
+                            .matchedGeometryEffect(id: flashcard, in: animation)
+                    }
+                   
+                          
+                    #if os(iOS)
+                    if isEditing {
+                        Image(systemName: "line.3.horizontal").opacity(0.5)
+                    }
+                    #endif
+                    
+                    
+                }.onTapGesture {
+                    state.toggleSelection(flashcard)
+                }
+            } moveAction: { from, to in
+                state.moveFlashcard(from: from, to: to)
+            }
+            .onChange(of: reorderingEnabled) { oldValue, newValue in
+                print("isEditing CHANGE: \(oldValue) -> \(newValue)")
+            }
+        }.toolbar {
+            #if os(iOS)
+            if isEditing {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button(role: .destructive) {
+                        withAnimation {
+                            state.deleteFlashcards()
+                        }
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }.disabled(state.selectedFlashcards.isEmpty)
+                }
+            }
+            #endif
+        }
     }
 }
 
@@ -206,3 +183,5 @@ extension FlashcardListView {
         #endif
     }
 }
+
+fileprivate let logger = Logger(subsystem: "FlashcardListView", category: "Views/Deck")

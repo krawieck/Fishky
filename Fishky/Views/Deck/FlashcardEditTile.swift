@@ -18,7 +18,6 @@ struct FlashcardEditTile: View {
     @Bindable var flashcard: Flashcard
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var context
-    let isActive: Bool
     #if os(iOS)
         @Environment(\.editMode) var editMode
         private var isEditing: Bool {
@@ -29,9 +28,8 @@ struct FlashcardEditTile: View {
     @State var frontIsTargeted: Bool = false
     @State var backIsTargeted: Bool = false
     
-    init(flashcard: Flashcard, isActive: Bool) {
+    init(flashcard: Flashcard) {
         _flashcard = Bindable(flashcard)
-        self.isActive = isActive
 //        self.selection = []
     }
 
@@ -50,23 +48,20 @@ struct FlashcardEditTile: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             VStack {
-                TextEditorViewRepresentable(text: $flashcard.frontText)
-//                TextEditorView(text: $flashcard.frontText,
-//                               hintText: "front", isActive: isActive)
-//                .overlay {
-//                    if frontIsTargeted {
-//                        dropHoverPreview
-//                    }
-//                }
-//                .onDrop(of: [.image], isTargeted: $frontIsTargeted) { providers in
-//                    return false
-//                }
+                TextEditorView(text: $flashcard.frontText,
+                               hintText: "front")
+                .overlay {
+                    if frontIsTargeted {
+                        dropHoverPreview
+                    }
+                }
+             
                 FlashcardPickerOrImage(flashcard: flashcard, side: .front)
-                // ------------------------------------------------------------------------------
+                // ----------------------------------------------------------
                 DashedLine()
-                // ------------------------------------------------------------------------------
+                // ----------------------------------------------------------
                 TextEditorView(text: $flashcard.backText,
-                               hintText: "back", isActive: isActive)
+                               hintText: "back")
                 .onDrop(of: [.image], isTargeted: $backIsTargeted) { providers in
                     return false
                 }
@@ -76,7 +71,6 @@ struct FlashcardEditTile: View {
                     }
                 }
                 FlashcardPickerOrImage(flashcard: flashcard, side: .back)
-               
             }
             .padding()
             .background(.background)
@@ -132,7 +126,7 @@ struct Line: Shape {
     @Previewable @Query var flashcards: [Flashcard]
     NavigationStack {
         ScrollView {
-            FlashcardEditTile(flashcard: flashcards.first!, isActive: true)
+            FlashcardEditTile(flashcard: flashcards.first!)
                 .safeAreaPadding(.all)
             
         }.toolbar {
@@ -144,5 +138,5 @@ struct Line: Shape {
 }
 
 #Preview {
-    FlashcardEditTile(flashcard: Flashcard(index: 0, front: "", back: ""), isActive: true).padding()
+    FlashcardEditTile(flashcard: Flashcard(index: 0, front: "", back: "")).padding()
 }

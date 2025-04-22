@@ -53,13 +53,13 @@ struct DeckListView: View {
         .overlay {
             if decks.isEmpty {
                 ContentUnavailableView {
-                    Label("No decks", systemImage: "text.document")
+                    Label("Create your first deck", systemImage: "text.document")
                 } description: {
-                    Text("New decks you create will appear here")
+                    Text("New decks you create will appear here.")
                 }
             }
         }
-    }
+    }   
 }
 
 // MARK: STATE

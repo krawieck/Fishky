@@ -8,6 +8,7 @@ public struct ReorderableForEach<Item: Reorderable, Content: View, Preview: View
     public init(
         _ items: [Item],
         active: Binding<Item?>,
+        reorderingEnabled: Bool = true,
         @ViewBuilder content: @escaping (Item) -> Content,
         @ViewBuilder preview: @escaping (Item) -> Preview,
         moveAction: @escaping (IndexSet, Int) -> Void
@@ -17,11 +18,13 @@ public struct ReorderableForEach<Item: Reorderable, Content: View, Preview: View
         self.content = content
         self.preview = preview
         self.moveAction = moveAction
+        self.reorderingEnabled = reorderingEnabled
     }
     
     public init(
         _ items: [Item],
         active: Binding<Item?>,
+        reorderingEnabled: Bool = true,
         @ViewBuilder content: @escaping (Item) -> Content,
         moveAction: @escaping (IndexSet, Int) -> Void
     ) where Preview == EmptyView {
@@ -30,6 +33,7 @@ public struct ReorderableForEach<Item: Reorderable, Content: View, Preview: View
         self.content = content
         self.preview = nil
         self.moveAction = moveAction
+        self.reorderingEnabled = reorderingEnabled
     }
     
     @Binding
@@ -43,20 +47,28 @@ public struct ReorderableForEach<Item: Reorderable, Content: View, Preview: View
     private let preview: ((Item) -> Preview)?
     private let moveAction: (IndexSet, Int) -> Void
     
+    var reorderingEnabled: Bool
+    
+    
     public var body: some View {
         ForEach(items) { item in
-            if let preview {
-                contentView(for: item)
-                    .onDrag {
-                        dragData(for: item)
-                    } preview: {
-                        preview(item)
-                    }
-            } else {
-                contentView(for: item)
-                    .onDrag {
-                        dragData(for: item)
-                    }
+            if !reorderingEnabled {
+                content(item)
+            } else {        
+                if let preview {
+                    contentView(for: item)
+                        .onDrag {
+                            dragData(for: item)
+                        } preview: {
+                            preview(item)
+                        }
+                    
+                } else {
+                    contentView(for: item)
+                        .onDrag {
+                            dragData(for: item)
+                        }
+                }
             }
         }
     }

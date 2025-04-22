@@ -1,21 +1,34 @@
 import SwiftUI
 import PhotosUI
 
-struct FlashcardPickerOrImage: View {
-    @Environment(\.colorScheme) var colorScheme
+// MARK: State
+
+@Observable
+class PickerState {
+    var flashcard: Flashcard
+    let side: Flashcard.Side
+    var pickerItem: PhotosPickerItem? = nil
     
-    @Bindable var flashcard: Flashcard
-    var side: Flashcard.Side
+    init(flashcard: Flashcard, side: Flashcard.Side, pickerItem: PhotosPickerItem? = nil) {
+        self.flashcard = flashcard
+        self.side = side
+        self.pickerItem = pickerItem
+    }
     
-    @State var pickerItem: PhotosPickerItem? = nil
+    var imageData: Data? {
+        switch side {
+        case .front:
+            flashcard.frontImage
+        case .back:
+            flashcard.backImage
+        }
+    }
     
-    func picker() -> some View {
-        return HStack {
-            Spacer()
-            PhotosPicker(selection: $pickerItem, matching: .images) {
-                Image(systemName: "photo.badge.plus")
-            }
-            Image(systemName: "camera.fill")
+    var uiImage: UIImage? {
+        if let imageData {
+            UIImage(data: imageData)
+        } else {
+            nil
         }
     }
     
@@ -28,55 +41,44 @@ struct FlashcardPickerOrImage: View {
         }
     }
     
+    func handleRemoveImage() {
+        flashcard.removeImage(onThe: side)
+    }
+}
+
+// MARK: View
+
+struct FlashcardPickerOrImage: View {
+    @Environment(\.colorScheme) var colorScheme
+    
+    @State var state: PickerState
+    
+    init(flashcard: Flashcard, side: Flashcard.Side) {
+        self.state = PickerState(flashcard: flashcard, side: side)
+    }
+    
+    
     var body: some View {
-        switch side {
-        case .front:
-            if let frontImageData = flashcard.frontImage,
-               let uiImage = UIImage(data: frontImageData) {
-                FlashcardImage(flashcard: flashcard, side: side, uiImage: uiImage)
-            } else {
-                picker().onChange(of: pickerItem, handleItemChange)
-                
-            }
-        case .back:
-            if let backImageData = flashcard.backImage,
-               let uiImage = UIImage(data: backImageData) {
-                FlashcardImage(flashcard: flashcard, side: side, uiImage: uiImage)
-            } else {
-                picker().onChange(of: pickerItem, handleItemChange)
-                
+        if let uiImage = state.uiImage {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)))
+                .contextMenu {
+                    Button("Delete", role: .destructive, action: state.handleRemoveImage)
+                }
+        } else {
+            picker().onChange(of: state.pickerItem, state.handleItemChange)
+        }
+    }
+    
+    func picker() -> some View {
+        return HStack {
+            Spacer()
+            PhotosPicker(selection: $state.pickerItem, matching: .images) {
+                Image(systemName: "photo.badge.plus")
             }
         }
-            
-            
-    }
-}
-
-struct FlashcardImage: View {
-    @Environment(\.colorScheme) var colorScheme
-    @Bindable var flashcard: Flashcard
-    var side: Flashcard.Side
-    
-    var uiImage: UIImage
-    
-    var body: some View {
-        // TODO: Fullscreen view with zoom and ... button at the top with delete, replace?
-        Image(uiImage: uiImage)
-            .resizable()
-            .scaledToFit()
-            .clipShape(RoundedRectangle(cornerSize: CGSize(width: 5, height: 5)))
-            .contextMenu {
-                Button("Delete", role: .destructive) {
-                    flashcard.removeImage(onThe: side)
-                }
-            }
-    }
-}
-
-
-struct FullscreenImage: View {
-    var body: some View {
-        Text("Hello, World!")
     }
 }
 

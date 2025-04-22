@@ -95,7 +95,6 @@ struct DeckView: View {
            
 #endif
 #if os(iOS)
-           
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
             }

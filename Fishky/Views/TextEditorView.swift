@@ -14,7 +14,6 @@ struct TextEditorView: View {
     @Binding var text: String
     var hintText: String
     @State private var textEditorHeight: CGFloat = 20
-    let isActive: Bool
     
     var body: some View {
         ZStack(alignment: .leading) {
@@ -50,7 +49,7 @@ struct TextEditorView: View {
 #Preview {
     @Previewable @State var text: String = ""
     
-    TextEditorView(text: $text, hintText: "test", isActive: true)
+    TextEditorView(text: $text, hintText: "test")
         .padding()
 }
 
