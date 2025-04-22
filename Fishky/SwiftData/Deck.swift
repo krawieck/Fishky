@@ -56,16 +56,12 @@ extension Deck {
     
     func moveFlashcard(from: IndexSet, to: Int) {
         guard !from.isEmpty else {
-            print("SHOULDNT HAPPEN")
+            logger.error("SHOULDNT HAPPEN")
             return
         }
         
-//        let logger = Logger()
-//        logger.info("from=\(from), to=\(to)")
-//        logger.info("start = min(\(from.min()!), \(to))")
         let clampedTo = min(flashcards.count - 1, to)
         let start = min(from.min()!, to)
-//        logger.info("end = max(\(from.max()!), \(to))")
         let end = max(from.max()!, clampedTo)
         
         
@@ -73,23 +69,16 @@ extension Deck {
         var index = sortedFlashcards[start].order
         sortedFlashcards.move(fromOffsets: from, toOffset: to)
         
-        
-        
-//        logger.info("len=\(sortedFlashcards.count)")
-//        logger.info("start: \(start), end: \(end)")
-        
         for i in start...end {
-//            logger.info("i=\(i)")
             sortedFlashcards[i].order = index
             index += 1
         }
         try? modelContext?.save()
-//        logger.info("")
     }
     
     func deleteFlashcard(_ flashcard: Flashcard) {
         guard flashcard.deck?.id == id else {
-            print("SHIT DONE BADLY")
+            logger.error("SHIT DONE BADLY")
             return
         }
         
@@ -115,7 +104,7 @@ extension Deck {
     
     func deleteFlashcards(_ forDeletion: Set<Int>) {
         guard !forDeletion.isEmpty else {
-            print("deleteFlashcards shouldnt have beed called")
+            logger.error("deleteFlashcards shouldnt have beed called")
             return
         }
         

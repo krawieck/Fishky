@@ -4,41 +4,6 @@ import SwiftData
 import PhotosUI
 import os
 
-//#if os(macOS)
-//extension NSImage {
-///// Returns the PNG data for the `NSImage` as a Data object.
-/////
-///// - Returns: A data object containing the PNG data for the image, or nil
-///// in the event of failure.
-/////
-//    public func pngData() -> Data? {
-//        guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-//            return nil
-//        }
-//        
-//        let bitmapRepresentation = NSBitmapImageRep(cgImage: cgImage)
-//        return bitmapRepresentation.representation(using: .png, properties: [:])
-//    }
-//}
-//#endif
-//#if os(iOS)
-//extension Image {
-//    public func pngData() async -> Data? {
-////        guard let cgImage = self.cgImage() else {
-////            return nil
-////        }
-//        do {
-//            return try await self.exported(as: .png)
-//        } catch {
-//            Logger().warning("\(error.localizedDescription)")
-//            return nil
-//        }
-//    }
-//}
-//#endif
-
-
-
 protocol Ordered {
     var order: Int { get set }
 }
@@ -101,21 +66,21 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
     
     
     func updateImage(onThe side: Side, with item: PhotosPickerItem) async {
-        print("gonna add this image")
+        logger.info("gonna add this image")
         if let data = try? await item.loadTransferable(type: Data.self) {
-            print("data size: \(data.count) bytes")
+            logger.info("data size: \(data.count) bytes")
             switch side {
                 case .back:
-                print("update on back")
+                logger.info("update on back")
                 backImage = data
                 break
             case .front:
-                print("update on front")
+                logger.info("update on front")
                 frontImage = data
                 break
             }
         }
-        print("finished adding image:)")
+        logger.info("finished adding image:)")
     }
 
     func removeImage(onThe side: Side) {

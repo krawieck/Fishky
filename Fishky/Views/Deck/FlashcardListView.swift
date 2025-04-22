@@ -146,9 +146,6 @@ struct FlashcardListView: View {
             } moveAction: { from, to in
                 state.moveFlashcard(from: from, to: to)
             }
-            .onChange(of: reorderingEnabled) { oldValue, newValue in
-                print("isEditing CHANGE: \(oldValue) -> \(newValue)")
-            }
         }.toolbar {
             #if os(iOS)
             if isEditing {
