@@ -119,14 +119,14 @@ struct FlashcardListView: View {
                     if !isEditing {
                         FlashcardEditTile(flashcard: flashcard)
                             .overlay(alignment: .topTrailing) {
-                                Circle().fill(flashcard.knowlegeColor).frame(width: 7, height: 7).padding(10)
+                                Circle().fill(flashcard.knowledgeColor).frame(width: 7, height: 7).padding(10)
                             }
                             .matchedGeometryEffect(id: flashcard, in: animation)
                         
                     } else {
                         FlashcardPreviewTile(flashcard: flashcard)
                             .overlay(alignment: .topTrailing) {
-                                Circle().fill(flashcard.knowlegeColor).frame(width: 7, height: 7).padding(10)
+                                Circle().fill(flashcard.knowledgeColor).frame(width: 7, height: 7).padding(10)
                             }
                             .matchedGeometryEffect(id: flashcard, in: animation)
                     }

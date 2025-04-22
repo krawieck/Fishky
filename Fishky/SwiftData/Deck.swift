@@ -3,7 +3,7 @@ import SwiftData
 import os
 
 private let secondsInDay: TimeInterval = 60 * 60 * 24
-let knowlegeExpiryTime: TimeInterval = secondsInDay * 7
+let knowledgeExpiryTime: TimeInterval = secondsInDay * 7
 
 @Model
 final class Deck: Hashable, CustomStringConvertible, Identifiable {
@@ -129,19 +129,19 @@ extension Deck {
 
     }
     
-    /// update knowlege based on Date. downgrade the ones that are expired
-    func applyKnowlegeAtrophy() {
+    /// update knowledge based on Date. downgrade the ones that are expired
+    func applyKnowledgeAtrophy() {
         for flashcard in flashcards {
-            if let knowlegeData = flashcard.knowlegeData {
-                // if expired then either bump the level of knowlege down, or remove it
-                if knowlegeData.expires > Date.now {
-                    switch knowlegeData.level {
+            if let knowledgeData = flashcard.knowledgeData {
+                // if expired then either bump the level of knowledge down, or remove it
+                if knowledgeData.expires > Date.now {
+                    switch knowledgeData.level {
                     case .low:
-                        flashcard.knowlegeData = nil
+                        flashcard.knowledgeData = nil
                     case .medium:
-                        flashcard.knowlegeData = KnowlegeData(expires: Date(timeInterval: knowlegeExpiryTime, since: Date.now), level: .low)
+                        flashcard.knowledgeData = KnowledgeData(expires: Date(timeInterval: knowledgeExpiryTime, since: Date.now), level: .low)
                     case .high:
-                        flashcard.knowlegeData = KnowlegeData(expires: Date(timeInterval: knowlegeExpiryTime, since: Date.now), level: .medium)
+                        flashcard.knowledgeData = KnowledgeData(expires: Date(timeInterval: knowledgeExpiryTime, since: Date.now), level: .medium)
                     }
                 }
             }
@@ -150,30 +150,30 @@ extension Deck {
     
     func shuffledFlashcards() -> [Flashcard] {
         logger.info("shuffling")
-        let unranked = flashcards.filter { $0.knowlegeData == nil }.shuffled()
-        let lowKnowlege = flashcards.filter { $0.knowlegeData?.level == .low }.shuffled()
-        let mediumKnowlege = flashcards.filter { $0.knowlegeData?.level == .medium }.shuffled()
-        let highKnowlege = flashcards.filter { $0.knowlegeData?.level == .high }.shuffled()
+        let unranked = flashcards.filter { $0.knowledgeData == nil }.shuffled()
+        let lowKnowledge = flashcards.filter { $0.knowledgeData?.level == .low }.shuffled()
+        let mediumKnowledge = flashcards.filter { $0.knowledgeData?.level == .medium }.shuffled()
+        let highKnowledge = flashcards.filter { $0.knowledgeData?.level == .high }.shuffled()
         
         logger.info("""
                     unranked: \(unranked)
-                    low: \(lowKnowlege)
-                    medium: \(mediumKnowlege)
-                    high: \(highKnowlege)
+                    low: \(lowKnowledge)
+                    medium: \(mediumKnowledge)
+                    high: \(highKnowledge)
                     """)
         
         logger.info("""
                     LEN
                     unranked: \(unranked.count)
-                    low: \(lowKnowlege.count)
-                    medium: \(mediumKnowlege.count)
-                    high: \(highKnowlege.count)
+                    low: \(lowKnowledge.count)
+                    medium: \(mediumKnowledge.count)
+                    high: \(highKnowledge.count)
                     """)
         
         
         
 
-        return unranked + lowKnowlege + mediumKnowlege + highKnowlege
+        return unranked + lowKnowledge + mediumKnowledge + highKnowledge
     }
 }
 

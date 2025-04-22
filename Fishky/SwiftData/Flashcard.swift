@@ -8,7 +8,7 @@ protocol Ordered {
     var order: Int { get set }
 }
 
-enum KnowlegeLevel: Int, Codable, CustomDebugStringConvertible {
+enum KnowledgeLevel: Int, Codable, CustomDebugStringConvertible {
     var debugDescription: String {
         switch self {
             case .low:
@@ -25,13 +25,13 @@ enum KnowlegeLevel: Int, Codable, CustomDebugStringConvertible {
     case high = 2
 }
 
-struct KnowlegeData: Codable, CustomDebugStringConvertible {
+struct KnowledgeData: Codable, CustomDebugStringConvertible {
     var debugDescription: String {
-        "KnowlegeData(\(expires), \(level))"
+        "KnowledgeData(\(expires), \(level))"
     }
     
     let expires: Date
-    let level: KnowlegeLevel
+    let level: KnowledgeLevel
 }
 
 @Model
@@ -48,24 +48,24 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
     @Attribute(.externalStorage) var backImage: Data?
     @Attribute(.externalStorage) var frontImage: Data?
     
-    var knowlegeData: KnowlegeData?
+    var knowledgeData: KnowledgeData?
     
     var deck: Deck?
     
-    init(index: Int, front: String = "", back: String = "", knowlegeData: KnowlegeData? = nil) {
+    init(index: Int, front: String = "", back: String = "", knowledgeData: KnowledgeData? = nil) {
         self.frontText = front
         self.backText = back
         
         self.order = index
-        self.knowlegeData = knowlegeData
+        self.knowledgeData = knowledgeData
     }
     
     var description: String {
         "Flashcard(index: \(order), frontText: \(frontText), backText: \(backText))"
     }
     
-    var knowlegeColor: Color {
-        switch knowlegeData?.level {
+    var knowledgeColor: Color {
+        switch knowledgeData?.level {
         case .low:
             .red
         case .medium:
@@ -107,10 +107,10 @@ final class Flashcard: Hashable, CustomStringConvertible, Ordered, Reorderable {
         }
     }
     
-    func updateKnowlege(_ knowlegeLevel: KnowlegeLevel, expires: Date? = nil) {
-        knowlegeData = KnowlegeData(expires: expires ?? Date(timeInterval: knowlegeExpiryTime, since: Date.now), level: knowlegeLevel)
+    func updateKnowledge(_ knowledgeLevel: KnowledgeLevel, expires: Date? = nil) {
+        knowledgeData = KnowledgeData(expires: expires ?? Date(timeInterval: knowledgeExpiryTime, since: Date.now), level: knowledgeLevel)
         
-        logger.info("knowlege updated for flashcard \(self.order) \(self.knowlegeData?.level.rawValue ?? -1)")
+        logger.info("knowledge updated for flashcard \(self.order) \(self.knowledgeData?.level.rawValue ?? -1)")
     }
     
     // MARK: OPERATIONS

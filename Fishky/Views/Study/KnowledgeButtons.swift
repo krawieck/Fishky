@@ -2,52 +2,52 @@ import SwiftUI
 import SwiftData
 import os.log
 
-struct KnowlegeButtons: View {
+struct KnowledgeButtons: View {
     @Bindable var flashcard: Flashcard
-    @State var newKnowlege: KnowlegeLevel? = nil
+    @State var newKnowledge: KnowledgeLevel? = nil
     
     var body: some View {
         return HStack {
             Button {
-                updateKnowlege(.high, for: flashcard)
+                updateKnowledge(.high, for: flashcard)
             } label: {
                 Image(systemName: "hand.thumbsup.fill")
                     .font(.system(.title2))
                     .padding(.all, 5)
             }.buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
-                .tint(newKnowlege != nil && newKnowlege != .high ? .gray : .green)
+                .tint(newKnowledge != nil && newKnowledge != .high ? .gray : .green)
             Button {
-                updateKnowlege(.medium, for: flashcard)
+                updateKnowledge(.medium, for: flashcard)
             } label: {
                 Text("🤔")
                     .font(.system(.title))
             }.buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
-                .tint(newKnowlege != nil && newKnowlege != .medium ? .gray : .indigo)
+                .tint(newKnowledge != nil && newKnowledge != .medium ? .gray : .indigo)
             Button {
-                updateKnowlege(.low, for: flashcard)
+                updateKnowledge(.low, for: flashcard)
             } label: {
                 Image(systemName: "hand.thumbsdown.fill")
                     .font(.system(.title2))
                     .padding(.all, 5)
             }.buttonStyle(.borderedProminent)
                 .buttonBorderShape(.circle)
-                .tint(newKnowlege != nil && newKnowlege != .low ? .gray : .red)
-        }.sensoryFeedback(.impact, trigger: newKnowlege)
+                .tint(newKnowledge != nil && newKnowledge != .low ? .gray : .red)
+        }.sensoryFeedback(.impact, trigger: newKnowledge)
     }
     
-    func updateKnowlege(_ knowlegeLevel: KnowlegeLevel, for flashcard: Flashcard) {
-        newKnowlege = knowlegeLevel
-        logger.info("newKnowlege = \(newKnowlege.debugDescription)")
-        flashcard.updateKnowlege(knowlegeLevel)
+    func updateKnowledge(_ knowledgeLevel: KnowledgeLevel, for flashcard: Flashcard) {
+        newKnowledge = knowledgeLevel
+        logger.info("newKnowledge = \(newKnowledge.debugDescription)")
+        flashcard.updateKnowledge(knowledgeLevel)
         logger.info("\(flashcard)")
     }
 }
 
 
 
-extension KnowlegeButtons {
+extension KnowledgeButtons {
     init(_ flashcard: Flashcard) {
         self.init(flashcard: flashcard)
     }
@@ -60,7 +60,7 @@ extension KnowlegeButtons {
     
     if let flashcard = decks.first(where: { !$0.flashcards.isEmpty })?.flashcards.first {
         NavigationStack {
-            KnowlegeButtons(flashcard)
+            KnowledgeButtons(flashcard)
         }
     } else {
         Text(":(")
@@ -69,4 +69,4 @@ extension KnowlegeButtons {
     
 }
 
-fileprivate let logger = Logger(subsystem: "KnowlegeButtons", category: "Views/Study")
+fileprivate let logger = Logger(subsystem: "KnowledgeButtons", category: "Views/Study")

@@ -20,7 +20,7 @@ class FullscreenStudyState {
     
     func initialize() {
         logger.info("real INIT")
-        deck.applyKnowlegeAtrophy()
+        deck.applyKnowledgeAtrophy()
         let shuffledFlashcards = deck.shuffledFlashcards()
         let flipped = Array(repeating: false, count: shuffledFlashcards.count)
         let showButtons = Array(repeating: false, count: shuffledFlashcards.count)
@@ -95,7 +95,7 @@ struct FullscreenStudyView: View {
                                 .onTapGesture {
                                     state.flipFlashcard(index)
                                 }
-                            KnowlegeButtons(flashcard)
+                            KnowledgeButtons(flashcard)
                                 .opacity(state.opacityOfButtons(for: index))
                         }
                         // TODO: fix alignment
