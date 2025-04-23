@@ -148,20 +148,40 @@ extension Deck {
     
     /// update knowledge based on Date. downgrade the ones that are expired
     func applyKnowledgeAtrophy() {
+        logger.info("applying knowledge atrophy")
         for flashcard in flashcards {
-            if let knowledgeData = flashcard.knowledgeData {
-                // if expired then either bump the level of knowledge down, or remove it
-                if knowledgeData.expires > Date.now {
-                    switch knowledgeData.level {
-                    case .low:
-                        flashcard.knowledgeData = nil
-                    case .medium:
-                        flashcard.knowledgeData = KnowledgeData(expires: Date(timeInterval: knowledgeExpiryTime, since: Date.now), level: .low)
-                    case .high:
-                        flashcard.knowledgeData = KnowledgeData(expires: Date(timeInterval: knowledgeExpiryTime, since: Date.now), level: .medium)
+            guard let knowledgeData = flashcard.knowledgeData else { continue }
+            
+            let now = Date.now
+            logger.info("knowledgeData.expires: \(knowledgeData.expires) < \(now)")
+            // if expired then either bump the level of knowledge down, or remove it
+            if knowledgeData.expires < now {
+                let newKnowledgeLevel: KnowledgeLevel? = {
+                    let timeSinceExpiry = now.timeIntervalSince(knowledgeData.expires)
+                    let expiryFactor = Int((timeSinceExpiry / knowledgeExpiryTime).rounded(.down))
+                    logger.info("expiry factor: \(timeSinceExpiry) / \(knowledgeExpiryTime) = \(expiryFactor)")
+                    return switch expiryFactor {
+                    case 0:
+                        knowledgeData.level.oneLevelDown
+                    case 1:
+                        knowledgeData.level.oneLevelDown?.oneLevelDown
+                    case 2:
+                        knowledgeData.level.oneLevelDown?.oneLevelDown?.oneLevelDown
+                    default:
+                        nil
                     }
+                }()
+                
+                if let newKnowledgeLevel {
+                    flashcard.knowledgeData = KnowledgeData(expires: Date(timeInterval: knowledgeExpiryTime, since: now), level: newKnowledgeLevel)
+                    logger.info("setting knowledge to \(newKnowledgeLevel.debugDescription)")
+                } else {
+                    flashcard.knowledgeData = nil
+                    logger.info("setting knowledge to nil")
                 }
+                
             }
+            
         }
     }
     

@@ -23,6 +23,17 @@ enum KnowledgeLevel: Int, Codable, CustomDebugStringConvertible {
     case low = 0
     case medium = 1
     case high = 2
+    
+    var oneLevelDown: KnowledgeLevel? {
+        switch self {
+        case .low:
+            return nil
+        case .medium:
+            return .low
+        case .high:
+            return .medium
+        }
+    }
 }
 
 struct KnowledgeData: Codable, CustomDebugStringConvertible {
