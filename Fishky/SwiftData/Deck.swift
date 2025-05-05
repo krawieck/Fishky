@@ -25,7 +25,8 @@ final class Deck: Hashable, CustomStringConvertible, Identifiable {
     }
     
     var percentageComplete: Double {
-        flashcards
+        if flashcards.isEmpty { return 0 }
+        let value = flashcards
             .map {
                 switch $0.knowledgeData?.level {
                 case .low:
@@ -38,6 +39,11 @@ final class Deck: Hashable, CustomStringConvertible, Identifiable {
                     0.0
                 }
             }.reduce(0, +) / Double(flashcards.count)
+        
+        if value.isNaN || value.isInfinite {
+            return 0
+        }
+        return value
     }
     
     

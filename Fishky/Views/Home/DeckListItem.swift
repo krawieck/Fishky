@@ -9,8 +9,10 @@ struct DeckListItem: View {
         
         return if percentage < 0.2 {
             .red
-        } else if percentage < 0.95 {
+        } else if percentage < 0.8 {
             .orange
+        } else if percentage < 0.95 {
+            .mint
         } else {
             .green
         }

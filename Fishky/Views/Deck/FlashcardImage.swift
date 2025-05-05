@@ -3,6 +3,7 @@ import PhotosUI
 
 // MARK: State
 
+@MainActor
 @Observable
 class PickerState {
     var flashcard: Flashcard
