@@ -18,13 +18,6 @@ actor DataModel {
             modelContainer = try ModelContainer(for: Deck.self, Flashcard.self)
         } catch {
             fatalError("Failed to create the model container: \(error)")
-//            print("Error detected: \(error)")
-//            do {
-//                try modelContainer.erase()
-//            } catch {
-//                fatalError("Failed to create the model container: \(error)")
-//            }
-            
         }
         
         return modelContainer
