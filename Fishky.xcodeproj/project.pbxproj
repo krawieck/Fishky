@@ -13,8 +13,6 @@
 		7B0433182A3E6F9A005A2B41 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B0433172A3E6F9A005A2B41 /* Preview Assets.xcassets */; };
 		7B0433212A3E74C2005A2B41 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0433202A3E74C2005A2B41 /* Deck.swift */; };
 		7B0433232A3E75D1005A2B41 /* Flashcard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0433222A3E75D1005A2B41 /* Flashcard.swift */; };
-		7B056CAE2DAE8414007CE8EB /* CropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 7B056CAD2DAE8414007CE8EB /* CropViewController */; };
-		7B056CB02DAE8414007CE8EB /* TOCropViewController in Frameworks */ = {isa = PBXBuildFile; productRef = 7B056CAF2DAE8414007CE8EB /* TOCropViewController */; };
 		7B25EB662D2EBC14009BBF9E /* FlashcardStudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B25EB652D2EBC03009BBF9E /* FlashcardStudyView.swift */; };
 		7B351B952D02167D00DA597F /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B351B942D02167B00DA597F /* DataModel.swift */; };
 		7B351B972D02175F00DA597F /* DeckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B351B962D02175B00DA597F /* DeckListView.swift */; };
@@ -66,8 +64,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B056CB02DAE8414007CE8EB /* TOCropViewController in Frameworks */,
-				7B056CAE2DAE8414007CE8EB /* CropViewController in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,8 +190,6 @@
 			);
 			name = Fishky;
 			packageProductDependencies = (
-				7B056CAD2DAE8414007CE8EB /* CropViewController */,
-				7B056CAF2DAE8414007CE8EB /* TOCropViewController */,
 			);
 			productName = Fishky;
 			productReference = 7B04330A2A3E6F99005A2B41 /* Fishky.app */;
@@ -226,7 +220,6 @@
 			);
 			mainGroup = 7B0433012A3E6F99005A2B41;
 			packageReferences = (
-				7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */,
 			);
 			productRefGroup = 7B04330B2A3E6F99005A2B41 /* Products */;
 			projectDirPath = "";
@@ -504,30 +497,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TimOliver/TOCropViewController";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.4;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		7B056CAD2DAE8414007CE8EB /* CropViewController */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */;
-			productName = CropViewController;
-		};
-		7B056CAF2DAE8414007CE8EB /* TOCropViewController */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 7B056CAC2DAE8414007CE8EB /* XCRemoteSwiftPackageReference "TOCropViewController" */;
-			productName = TOCropViewController;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7B0433022A3E6F99005A2B41 /* Project object */;
 }
