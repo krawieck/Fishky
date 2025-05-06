@@ -96,7 +96,6 @@
 				7B04330D2A3E6F99005A2B41 /* FishkyApp.swift */,
 				7B04331F2A3E6FD7005A2B41 /* SwiftData */,
 				7B557BBA2A52BCFC00A5DE26 /* Views */,
-				7B557BBF2A52C2C900A5DE26 /* Support */,
 				7B0433132A3E6F9A005A2B41 /* Assets.xcassets */,
 				7B0433152A3E6F9A005A2B41 /* Fishky.entitlements */,
 				7B0433192A3E6F9A005A2B41 /* Info.plist */,
@@ -130,7 +129,7 @@
 				7BB573712D0746F90005C24D /* Home */,
 				7BB573722D0747120005C24D /* Deck */,
 				7B9310CC2D0F1F49008BDCBC /* Study */,
-				7BDA0AA42CF5FC5200DDDDD6 /* TextEditorView.swift */,
+				7B557BBF2A52C2C900A5DE26 /* Support */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -140,6 +139,7 @@
 			children = (
 				7BB30E8B2D53C8BD008CC123 /* ReorderableForEach.swift */,
 				7BE9D79C2D525FC1007CE6CD /* AdaptiveList.swift */,
+				7BDA0AA42CF5FC5200DDDDD6 /* TextEditorView.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
