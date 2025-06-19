@@ -2,15 +2,6 @@ import SwiftUI
 import PhotosUI
 import SwiftData
 
-// MARK: DeleteButton
-
-struct DeleteButton: View {
-    let action: () -> Void
-
-    var body: some View {
-        Image(systemName: "xmark.circle.fill")
-    }
-}
 
 // MARK: FlashcardEditView
 
@@ -18,50 +9,29 @@ struct FlashcardEditTile: View {
     @Bindable var flashcard: Flashcard
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.modelContext) var context
-    #if os(iOS)
-        @Environment(\.editMode) var editMode
-        private var isEditing: Bool {
-            editMode?.wrappedValue.isEditing ?? false
-        }
-    #endif
     
     init(flashcard: Flashcard) {
         _flashcard = Bindable(flashcard)
     }
-
-
-    var body: some View {
-        ZStack(alignment: .topTrailing) {
-            VStack {
-                TextEditorView(text: $flashcard.frontText,
-                               hintText: "front")
-             
-                FlashcardPickerOrImage(flashcard: flashcard, side: .front)
-                // ----------------------------------------------------------
-                DashedLine()
-                // ----------------------------------------------------------
-                TextEditorView(text: $flashcard.backText,
-                               hintText: "back")
-                FlashcardPickerOrImage(flashcard: flashcard, side: .back)
-            }
-            .padding()
-            .background(.background)
-            .addBorder(.gray.opacity(colorScheme == .dark ? 0.5 : 0.5), cornerRadius: 15)
-            
-            
-            
-            
-            
-        }
-    }
     
-    func deleteFlashcard(_ flashcard: Flashcard) {
-       withAnimation {
-           flashcard.deck?.deleteFlashcard(flashcard)
-           try? context.save()
-       }
-       
-   }
+    
+    var body: some View {
+        VStack {
+            TextEditorView(text: $flashcard.frontText,
+                           hintText: "front")
+            
+            FlashcardPickerOrImage(flashcard: flashcard, side: .front)
+            // ----------------------------------------------------------
+            DashedLine()
+            // ----------------------------------------------------------
+            TextEditorView(text: $flashcard.backText,
+                           hintText: "back")
+            FlashcardPickerOrImage(flashcard: flashcard, side: .back)
+        }
+        .padding()
+        .background(.background)
+        .addBorder(.gray.opacity(colorScheme == .dark ? 0.5 : 0.5), cornerRadius: 15)
+    }
 }
 
 // MARK: Border
@@ -104,9 +74,9 @@ struct Line: Shape {
                 .safeAreaPadding(.all)
             
         }.toolbar {
-            #if os(iOS)
+#if os(iOS)
             EditButton()
-            #endif
+#endif
         }
     }
 }

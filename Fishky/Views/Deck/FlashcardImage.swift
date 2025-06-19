@@ -6,14 +6,13 @@ import PhotosUI
 @MainActor
 @Observable
 class PickerState {
-    var flashcard: Flashcard
+    private(set) var flashcard: Flashcard
     let side: Flashcard.Side
     var pickerItem: PhotosPickerItem? = nil
     
-    init(flashcard: Flashcard, side: Flashcard.Side, pickerItem: PhotosPickerItem? = nil) {
+    init(flashcard: Flashcard, side: Flashcard.Side) {
         self.flashcard = flashcard
         self.side = side
-        self.pickerItem = pickerItem
     }
     
     var imageData: Data? {

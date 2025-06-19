@@ -2,16 +2,16 @@ import SwiftUI
 import SwiftData
 import os.log
 
+// MARK: State
+
 @Observable
 class FullscreenStudyState {
-    var deck: Deck
-    var flashcards: [Flashcard] = []
-    var currentIndex: Int = 0
+    private(set) var deck: Deck
+    private(set) var flashcards: [Flashcard] = []
     var flipped: [Bool] = []
-    var showButtons: [Bool] = []
-    var waitingForInit: Bool = true
+    private(set) var showButtons: [Bool] = []
+    private(set) var waitingForInit: Bool = true
     
-    var currentFlashcard: Flashcard { flashcards[currentIndex] }
     var noFlashcards: Bool { deck.flashcards.isEmpty }
     
     init(for deck: Deck) {
@@ -19,7 +19,11 @@ class FullscreenStudyState {
     }
     
     func initialize() {
-        logger.info("real INIT")
+        if !waitingForInit {
+            logger.warning("attemted another initialization")
+            return
+        }
+        logger.info("state initialize")
         deck.applyKnowledgeAtrophy()
         let shuffledFlashcards = deck.shuffledFlashcards()
         let flipped = Array(repeating: false, count: shuffledFlashcards.count)
@@ -44,6 +48,7 @@ class FullscreenStudyState {
     }
 }
 
+// MARK: Window
 
 extension FullscreenStudyView {
     struct Window: View {
@@ -61,6 +66,8 @@ extension FullscreenStudyView {
     }
 }
 
+// MARK: View
+
 struct FullscreenStudyView: View {
     @Environment(\.dismiss) private var dismiss
     
@@ -68,7 +75,7 @@ struct FullscreenStudyView: View {
     @State var closeDeck: Bool = false
     
     init(deck: Deck) {
-        logger.info("fake INIT")
+        logger.info("view init")
         self.state = FullscreenStudyState(for: deck)
     }
     init(for id: Deck.ID, with context: ModelContext) {
@@ -130,8 +137,6 @@ struct FullscreenStudyView: View {
                                     .sensoryFeedback(.success, trigger: closeDeck)
                                     .padding()
                             }
-                            
-                            
                         }
                         .background(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 15, style: .circular))
@@ -176,12 +181,9 @@ struct FullscreenStudyView: View {
                 .padding(.horizontal, 15)
         }
         #endif
-        
     }
-    
-  
-    
 }
+
 
 // MARK: PREVIEW
 

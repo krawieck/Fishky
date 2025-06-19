@@ -4,20 +4,19 @@ import os
 
 @Observable
 class FlashcardListState {
-    var deck: Deck
-    var flashcardFocus: FlashcardFocus?
+    private(set) var deck: Deck
     
     var reorderedFlashcard: Flashcard?
     var reorderInProgress: Bool { reorderedFlashcard != nil }
     
-    var selectedFlashcards: Set<Int> = []
+    private(set) var selectedFlashcards: Set<Int> = []
 
    
     init(deck: Deck) {
         self.deck = deck
     }
     
-    
+
     func isSelected(flashcard: Flashcard) -> Bool {
         selectedFlashcards.contains(flashcard.order)
     }
@@ -33,6 +32,10 @@ class FlashcardListState {
         }
     }
     
+    func resetSelection() {
+        selectedFlashcards = []
+    }
+    
     func deleteFlashcards() {
         withAnimation {
             logger.info("delete flashcards")
@@ -45,24 +48,11 @@ class FlashcardListState {
         deck.deleteFlashcard(flashcard)
     }
     
-    func flashcardUpdateFocus(flashcard: Flashcard, onThe side: FlashcardFocus.FlashcardSide) {
-        flashcardFocus = FlashcardFocus(flashcard: flashcard, side: side)
-    }
-    
     func moveFlashcard(from: IndexSet, to: Int) {
         deck.moveFlashcard(from: from, to: to)
     }
 }
 
-
-struct FlashcardFocus {
-    let flashcard: Flashcard
-    let side: FlashcardSide
-    
-    enum FlashcardSide {
-        case front, back
-    }
-}
 
 struct FlashcardListView: View {
     // MARK: debug variables
@@ -112,7 +102,7 @@ struct FlashcardListView: View {
                                 Image(systemName: "circle")
                             }
                             
-                        }.sensoryFeedback(.selection, trigger: state.selectedFlashcards)
+                        }
                     }
                     #endif
                     
@@ -129,6 +119,7 @@ struct FlashcardListView: View {
                                 Circle().fill(flashcard.knowledgeColor).frame(width: 7, height: 7).padding(10)
                             }
                             .matchedGeometryEffect(id: flashcard, in: animation)
+                            .sensoryFeedback(.selection, trigger: state.selectedFlashcards)
                     }
                     
                           
@@ -155,7 +146,7 @@ struct FlashcardListView: View {
                 }
             }
             #endif
-        }
+        }.onChange(of: isEditing, state.resetSelection)
     }
 }
 

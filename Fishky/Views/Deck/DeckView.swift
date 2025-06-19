@@ -49,11 +49,10 @@ struct DeckView: View {
     
     var body: some View {
         ScrollView {
-            TextField("Untitled Deck", text: $deck.name)
+            TextField("Untitled deck", text: $deck.name)
                 .font(.largeTitle.bold())
                 .listRowSeparator(.hidden)
             FlashcardListView(deck)
-            // TODO: move this to FlashcardListView so that it changes size based on the list type
             NewFlashcardButton {
                 withAnimation(.bouncy) {
                     addFlashcard()
